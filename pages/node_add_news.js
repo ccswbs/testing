@@ -1,7 +1,7 @@
 import { Selector } from 'testcafe';
 
 module.exports = {
-  URL:'/node/add/event'
+  URL:'/node/add/news',
   auth:{
     pageTitle:Selector('h1.page-title'),
     titleInput:Selector('#edit-title'),

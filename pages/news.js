@@ -7,6 +7,9 @@ module.exports = {
 	},
   auth:{
     noResults:Selector('div.view-empty'),
+    newsListingArea:Selector('div.view-content'),
+    newsListingTitle:Selector('h2.media-heading'),
+    newsListingTitleLink:Selector('h2.media-heading').find('a'),
     panelsCustomizeButton:Selector('#panels-ipe-customize-page'),
     panelsAddToTop:Selector('#panels-ipe-regionid-top').find('a[title="Add new pane"]'),
     panelsAddToLeft:Selector('#panels-ipe-regionid-left').find('a[title="Add new pane"]'),
