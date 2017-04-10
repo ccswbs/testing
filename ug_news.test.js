@@ -24,10 +24,10 @@ test('Event listing page test', async t => {
 		// Navigate to news listing page
 		.navigateTo(Env.baseURL + NewsPage.URL)
 		// Ensure created news item is listed
-		.expect(NewsPage.auth.newsListingTitle.innerText).eql('Test News')
+		.expect(NewsPage.common.newsListingTitle.innerText).eql('Test News')
 		// Click into news item
-		.click(NewsPage.auth.newsListingTitleLink)
+		.click(NewsPage.common.newsListingTitleLink)
 		// Ensure fields entered when created exsist
-		.expect(NewsListing.auth.pageTitle.innerText).eql('Test News')
-		.expect(NewsListing.auth.writtenBy.innerText).contains('Test Author')
+		.expect(NewsListing.common.pageTitle.innerText).eql('Test News')
+		.expect(NewsListing.common.writtenBy.innerText).contains('Test Author')
 });
