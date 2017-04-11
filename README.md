@@ -20,3 +20,6 @@ Tests are written in ES6 (JavaScript) and allow all node.js functionality such a
 All testfiles are stored in the root directory and end in `.test.js` for ease of identification. Each page that is referenced should have it's selectors defined in a pagefile located in `./pages` and named to match the url; that is, `http://127.0.0.1/testsite/admin/content` would have its selectors defined in `./pages/admin_content.js`. If the pagefile already exists, it should first be checked for the required selector and a new selector added to the existing file if there is not already one that suits the need.
 
 Any general utilities such as methods to generate random numbers or strings reside in the `./utils.js` file. Any additional utilities should be added to this file. In order to reference any utilities in a test, the library should be imported as `Util` to maintain consistency.
+
+## Unit Testing
+The ava.js framework provides unit testing capabilities for the test suite itself. Ava tests can be run using `npm test` which will target any tests in the `./unit_tests` directory. Documentation for writing Ava tests is in the README in the ava.js repository here: https://github.com/avajs/ava.
