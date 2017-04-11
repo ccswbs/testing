@@ -4,15 +4,23 @@
   "description": "Test suite for hjckrrh",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava",
+    "tap": "tap-nyan"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "ava": "^0.19.1",
+    "tap-nyan": "^1.1.0",
     "testcafe": "^0.13.0",
     "testcafe-browser-provider-nightmare": "0.0.4"
   },
   "dependencies": {
     "nightmare": "^2.10.0"
+  },
+  "ava":{
+    "files":[
+      "unit_tests/*.ava.js"
+    ]
   }
 }
