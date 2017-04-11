@@ -16,10 +16,12 @@
     "testcafe-browser-provider-nightmare": "0.0.4"
   },
   "dependencies": {
-    "nightmare": "^2.10.0"
+    "nightmare": "^2.10.0",
+    "querystring": "^0.2.0",
+    "request": "^2.81.0"
   },
-  "ava":{
-    "files":[
+  "ava": {
+    "files": [
       "unit_tests/*.ava.js"
     ]
   }
