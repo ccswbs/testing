@@ -20,8 +20,10 @@ test('Test PP6', async t => {
 		.typeText(UserPage.anon.userInput, Env.creds.admin.username)
 		.typeText(UserPage.anon.passInput, Env.creds.admin.password)
 		.click(UserPage.anon.submitButton)
+
 		// Ensure login successful
 		.expect(UserPage.auth.pageHeader.innerText).eql(Env.creds.admin.username)
+
 		// Create node
 		.navigateTo(Env.baseURL + AddProfilePage.URL)
 		.typeText(AddProfilePage.auth.nameInput, name)
@@ -29,6 +31,7 @@ test('Test PP6', async t => {
 		.typeText(AddProfilePage.auth.emailInput, email)
 		.typeText(AddProfilePage.auth.phoneInput, phone)
 		.click(AddProfilePage.auth.saveButton)
+
 		// Setup people page with PP6
 		.navigateTo(Env.baseURL + PeoplePage.URL)
 		.setNativeDialogHandler(() => true)
@@ -56,4 +59,66 @@ test('Test PP6', async t => {
 		.click(AdminContent.auth.operationDeleteOption)
 		.click(AdminContent.auth.updateButton)
 		.click(AdminContent.auth.confirmDelete);
+});
+
+test('Test Exposed Role Filter', async t => {
+	const name = Util.RandomName(4, 10);
+	const lastname = Util.RandomName(4, 10);
+	const email = Util.RandomEmail();
+	const phone = Util.RandomPhone('519-824-4120 ext. #####');
+
+	await t
+		// Authenticate
+		.typeText(UserPage.anon.userInput, Env.creds.admin.username)
+		.typeText(UserPage.anon.passInput, Env.creds.admin.password)
+		.click(UserPage.anon.submitButton)
+
+		// Ensure login successful
+		.expect(UserPage.auth.pageHeader.innerText).eql(Env.creds.admin.username)
+
+		// Ensure filter does not exist
+		.navigateTo(Env.baseURL + PeoplePage.URL)
+		.expect(PeoplePage.common.viewFilters.innerHTML).notMatch(/[\s\S]*\"edit-field-profile-role-tid-wrapper\"[\s\S]*/g)
+
+		// Create profile with role to make filter appear
+		.navigateTo(Env.baseURL + AddProfilePage.URL)
+		.typeText(AddProfilePage.auth.nameInput, name)
+		.typeText(AddProfilePage.auth.lastNameInput, lastname)
+		.click(AddProfilePage.auth.adjunctFacultyRoleCheck)
+		.typeText(AddProfilePage.auth.emailInput, email)
+		.typeText(AddProfilePage.auth.phoneInput, phone)
+		.click(AddProfilePage.auth.saveButton);
+
+		const nid = await t.eval(function() {
+			var edit = null;
+			document.querySelectorAll('li a').forEach(function(el) {
+				if(el.innerText == "Edit") edit = el;
+			});
+			var arr = /node\/(\d*)\//g.exec(edit.getAttribute('href'));
+			return parseInt(arr[1]);
+		});
+
+	await t
+		// Ensure filter exists
+		.navigateTo(Env.baseURL + PeoplePage.URL)
+		.expect(PeoplePage.common.roleFilter).ok()
+
+		// Edit profile
+		.navigateTo(Env.baseURL + '/node/' + nid + '/edit')
+		.click(AddProfilePage.auth.adjunctFacultyRoleCheck)
+		.click(AddProfilePage.auth.saveButton)
+
+		// Ensure filter is gone again
+		.navigateTo(Env.baseURL + PeoplePage.URL)
+		.expect(PeoplePage.common.viewFilters.innerHTML).notMatch(/[\s\S]*\"edit-field-profile-role-tid-wrapper\"[\s\S]*/g);
+
+	/*var check = Selector('.form-checkbox[title="Select all rows in thie table"]');
+	if(check.exists) {
+		await t
+			.click(check)
+			.click(AdminContent.auth.operationSelect)
+			.click(AdminContent.auth.operationDeleteOption)
+			.click(AdminContent.auth.updateButton)
+			.click(AdminContent.auth.confirmDelete)
+	}*/
 });
