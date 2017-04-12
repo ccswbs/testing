@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
+    "testcafe": "testcafe",
     "tap": "tap-nyan"
   },
   "author": "",
