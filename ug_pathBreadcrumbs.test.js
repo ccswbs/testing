@@ -48,14 +48,18 @@ fixture `UG Breadcrumb`
   		.click(AdminContent.auth.confirmDelete)
       //Delete taxonomy information
       .navigateTo(Env.baseURL + ListServiceAudience.URL)
-      .click('ListServiceAudience.auth.editButton')
-      .click('ListServiceAudience.auth.deleteButton')
-      .click('ListServiceAudience.auth.confirmDelete')
+      .click(ListServiceAudience.auth.editButton)
+      .wait(500)
+      .click(ListServiceAudience.auth.deleteButton)
+      .wait(500)
+      .click(ListServiceAudience.auth.confirmDelete)
 
       .navigateTo(Env.baseURL + ListServiceCategory.URL)
-      .click('ListServiceCategory.auth.editButton')
-      .click('ListServiceCategory.auth.deleteButton')
-      .click('ListServiceCategory.auth.confirmDelete')
+      .click(ListServiceCategory.auth.editButton)
+      .wait(500)
+      .click(ListServiceCategory.auth.deleteButton)
+      .wait(500)
+      .click(ListServiceCategory.auth.confirmDelete)
 
   });
 
