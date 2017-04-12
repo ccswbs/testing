@@ -1,0 +1,11 @@
+{
+	"tags":{
+		"allowUnknownTags":false,
+		"dictionaries":["jsdoc"]
+	},
+	"source":{
+		"includePattern":".+\\.js$",
+		"excludePattern":".+\\.test.js$"
+	},
+	"plugins":[]
+}
