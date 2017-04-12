@@ -61,7 +61,7 @@ test('Test PP6', async t => {
 		.click(AdminContent.auth.confirmDelete);
 });
 
-test('Test Exposed Role Filter', async t => {
+test('Test PP1 Exposed Role Filter', async t => {
 	const name = Util.RandomName(4, 10);
 	const lastname = Util.RandomName(4, 10);
 	const email = Util.RandomEmail();
@@ -77,9 +77,13 @@ test('Test Exposed Role Filter', async t => {
 		.expect(UserPage.auth.pageHeader.innerText).eql(Env.creds.admin.username)
 
 		// Ensure filter does not exist
-		.navigateTo(Env.baseURL + PeoplePage.URL)
-		.expect(PeoplePage.common.viewFilters.innerHTML).notMatch(/[\s\S]*\"edit-field-profile-role-tid-wrapper\"[\s\S]*/g)
+		.navigateTo(Env.baseURL + PeoplePage.URL);
 
+	if(PeoplePage.common.viewFilters.innerHTML) {
+		await t.expect(PeoplePage.common.viewFilters.innerHTML).notMatch(/[\s\S]*\"edit-field-profile-role-tid-wrapper\"[\s\S]*/g);
+	}
+
+	await t
 		// Create profile with role to make filter appear
 		.navigateTo(Env.baseURL + AddProfilePage.URL)
 		.typeText(AddProfilePage.auth.nameInput, name)
@@ -103,22 +107,20 @@ test('Test Exposed Role Filter', async t => {
 		.navigateTo(Env.baseURL + PeoplePage.URL)
 		.expect(PeoplePage.common.roleFilter).ok()
 
-		// Edit profile
+		// Edit profile to remove role
 		.navigateTo(Env.baseURL + '/node/' + nid + '/edit')
 		.click(AddProfilePage.auth.adjunctFacultyRoleCheck)
 		.click(AddProfilePage.auth.saveButton)
 
 		// Ensure filter is gone again
-		.navigateTo(Env.baseURL + PeoplePage.URL)
-		.expect(PeoplePage.common.viewFilters.innerHTML).notMatch(/[\s\S]*\"edit-field-profile-role-tid-wrapper\"[\s\S]*/g);
+		.navigateTo(Env.baseURL + PeoplePage.URL);
 
-	/*var check = Selector('.form-checkbox[title="Select all rows in thie table"]');
-	if(check.exists) {
-		await t
-			.click(check)
-			.click(AdminContent.auth.operationSelect)
-			.click(AdminContent.auth.operationDeleteOption)
-			.click(AdminContent.auth.updateButton)
-			.click(AdminContent.auth.confirmDelete)
-	}*/
+	if(PeoplePage.common.viewFilters.innerHTML) {
+		await t.expect(PeoplePage.common.viewFilters.innerHTML).notMatch(/[\s\S]*\"edit-field-profile-role-tid-wrapper\"[\s\S]*/g);
+	}
+
+	await t
+		.navigateTo(Env.baseURL + '/node/' + nid + '/edit')
+		.click(AddProfilePage.auth.deleteButton)
+		.click(AddProfilePage.auth.confirmDeleteButton)
 });
