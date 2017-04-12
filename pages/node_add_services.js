@@ -9,6 +9,8 @@ module.exports = {
     saveButton:Selector('#edit-submit'),
     categorySelect:Selector('#edit-field-service-category-und'),
     testCategorySelect:Selector('option', { text:'Test Category' }),
+    urlSettings:Selector('a').withText('URL path settings'),
+    autoURLCheck:Selector('#edit-path-pathauto')
 
   }
 }

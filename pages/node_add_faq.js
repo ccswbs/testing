@@ -8,6 +8,8 @@ module.exports = {
     iframe:Selector('iframe.cke_wysiwyg_frame'),
     answer:Selector('body.cke_editable'),
     saveButton:Selector('#edit-submit'),
+    urlSettings:Selector('a').withText('URL path settings'),
+    autoURLCheck:Selector('#edit-path-pathauto')
 
   }
 }

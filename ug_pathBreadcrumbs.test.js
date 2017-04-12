@@ -10,6 +10,10 @@ const AddServiceAudience = require('./pages/admin_structure_taxonomy_service_aud
 const ListServiceAudience = require('./pages/admin_structure_taxonomy_service_audience.js')
 const ListServiceCategory = require('./pages/admin_structure_taxonomy_service_category.js')
 const AdminContent = require('./pages/admin_content.js');
+const ServiceItem = require('./pages/service_item.js');
+const NewsItem = require('./pages/news_item.js');
+const FAQItem = require('./pages/FAQ_item.js');
+const EventItem = require('./pages/event_item.js');
 import { Selector } from 'testcafe';
 
 fixture `UG Breadcrumb`
@@ -36,8 +40,14 @@ fixture `UG Breadcrumb`
       .typeText(AddService.auth.titleInput, 'Test Service')
       .click(AddService.auth.categorySelect)
       .click(AddService.auth.testCategorySelect)
+      // Turn off automatic URL generation
+      .click(AddService.auth.urlSettings)
+      .click(AddService.auth.autoURLCheck)
       .click(AddService.auth.saveButton)
-
+      // Ensure crumb is on page by clicking
+      .navigateTo(Env.baseURL + AdminContent.URL)
+      .click(await Selector('a').withText('Test Service'))
+      .click(ServiceItem.common.crumb)
 
       //Delete service
       .navigateTo(Env.baseURL + AdminContent.URL)
@@ -46,6 +56,26 @@ fixture `UG Breadcrumb`
   		.click(AdminContent.auth.operationDeleteOption)
   		.click(AdminContent.auth.updateButton)
   		.click(AdminContent.auth.confirmDelete)
+
+      // Do it again with URL alias on
+      //Create service
+      .navigateTo(Env.baseURL + AddService.URL)
+      .typeText(AddService.auth.titleInput, 'Test Service')
+      .click(AddService.auth.categorySelect)
+      .click(AddService.auth.testCategorySelect)
+      .click(AddService.auth.saveButton)
+      // Ensure crumb is on page by clicking
+      .navigateTo(Env.baseURL + AdminContent.URL)
+      .click(await Selector('a').withText('Test Service'))
+      .click(ServiceItem.common.crumb)
+      //Delete service
+      .navigateTo(Env.baseURL + AdminContent.URL)
+      .click(await Selector('label').withText('Test Service').nextSibling())
+      .click(AdminContent.auth.operationSelect)
+      .click(AdminContent.auth.operationDeleteOption)
+      .click(AdminContent.auth.updateButton)
+      .click(AdminContent.auth.confirmDelete)
+
       //Delete taxonomy information
       .navigateTo(Env.baseURL + ListServiceAudience.URL)
       .click(ListServiceAudience.auth.editButton)
@@ -53,7 +83,6 @@ fixture `UG Breadcrumb`
       .click(ListServiceAudience.auth.deleteButton)
       .wait(500)
       .click(ListServiceAudience.auth.confirmDelete)
-
       .navigateTo(Env.baseURL + ListServiceCategory.URL)
       .click(ListServiceCategory.auth.editButton)
       .wait(500)
@@ -69,6 +98,31 @@ test('FAQ breadcrumb test', async t => {
     .typeText(UserPage.anon.userInput, Env.creds.admin.username)
 		.typeText(UserPage.anon.passInput, Env.creds.admin.password)
 		.click(UserPage.anon.submitButton)
+    // Ensure login successful
+    .expect(UserPage.auth.pageHeader.innerText).eql(Env.creds.admin.username)
+    // Create FAQ
+    .navigateTo(Env.baseURL + AddFAQ.URL)
+    .typeText(AddFAQ.auth.questionInput, 'Test Question')
+    .switchToIframe(AddFAQ.auth.iframe)
+    .typeText(AddFAQ.auth.answer, 'Test Answer')
+    .switchToMainWindow()
+    // Turn off automatic URL generation
+    .click(AddFAQ.auth.urlSettings)
+    .click(AddFAQ.auth.autoURLCheck)
+    .click(AddFAQ.auth.saveButton)
+    // Ensure is on page by clicking
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('a').withText('Test Question'))
+    .click(FAQItem.common.crumb)
+    //Delete FAQ
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('label').withText('Test Question').nextSibling())
+    .click(AdminContent.auth.operationSelect)
+    .click(AdminContent.auth.operationDeleteOption)
+    .click(AdminContent.auth.updateButton)
+    .click(AdminContent.auth.confirmDelete)
+
+    // Do it again with URL alias on
     // Create FAQ
     .navigateTo(Env.baseURL + AddFAQ.URL)
     .typeText(AddFAQ.auth.questionInput, 'Test Question')
@@ -76,7 +130,10 @@ test('FAQ breadcrumb test', async t => {
     .typeText(AddFAQ.auth.answer, 'Test Answer')
     .switchToMainWindow()
     .click(AddFAQ.auth.saveButton)
-
+    // Ensure is on page by clicking
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('a').withText('Test Question'))
+    .click(FAQItem.common.crumb)
     //Delete FAQ
     .navigateTo(Env.baseURL + AdminContent.URL)
     .click(await Selector('label').withText('Test Question').nextSibling())
@@ -98,8 +155,32 @@ test('News breadcrumb test', async t => {
 		.navigateTo(Env.baseURL + AddNewsPage.URL)
 		.typeText(AddNewsPage.auth.titleInput, 'Test News')
 		.typeText(AddNewsPage.auth.writtenBy, 'Test Author')
+    // Turn off automatic URL generation
+    .click(AddNewsPage.auth.urlSettings)
+    .click(AddNewsPage.auth.autoURLCheck)
 		.click(AddNewsPage.auth.saveButton)
+    // Ensure is on page by clicking
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('a').withText('Test News'))
+    .click(NewsItem.common.crumb)
+    //Delete News
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('label').withText('Test News').nextSibling())
+    .click(AdminContent.auth.operationSelect)
+    .click(AdminContent.auth.operationDeleteOption)
+    .click(AdminContent.auth.updateButton)
+    .click(AdminContent.auth.confirmDelete)
 
+    // Do it again, leaving URL alias on
+    // Create news item
+    .navigateTo(Env.baseURL + AddNewsPage.URL)
+    .typeText(AddNewsPage.auth.titleInput, 'Test News')
+    .typeText(AddNewsPage.auth.writtenBy, 'Test Author')
+    .click(AddNewsPage.auth.saveButton)
+    // Ensure is on page by clicking
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('a').withText('Test News'))
+    .click(NewsItem.common.crumb)
     //Delete News
     .navigateTo(Env.baseURL + AdminContent.URL)
     .click(await Selector('label').withText('Test News').nextSibling())
@@ -116,12 +197,38 @@ test('Event breadcrumb test', async t => {
     .typeText(UserPage.anon.userInput, Env.creds.admin.username)
 		.typeText(UserPage.anon.passInput, Env.creds.admin.password)
 		.click(UserPage.anon.submitButton)
+    // Ensure login successful
+    .expect(UserPage.auth.pageHeader.innerText).eql(Env.creds.admin.username)
+    // Create event
+    .navigateTo(Env.baseURL + AddEventPage.URL)
+    .typeText(AddEventPage.auth.titleInput, 'Test Event')
+    .click(AddEventPage.auth.allDayCheck)
+    // Turn off automatic URL generation
+    .click(AddEventPage.auth.urlSettings)
+    .click(AddEventPage.auth.autoURLCheck)
+    .click(AddEventPage.auth.saveButton)
+    // Ensure is on page by clicking
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('a').withText('Test Event'))
+    .click(EventItem.common.crumb)
+    //Delete Event
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('label').withText('Test Event').nextSibling())
+    .click(AdminContent.auth.operationSelect)
+    .click(AdminContent.auth.operationDeleteOption)
+    .click(AdminContent.auth.updateButton)
+    .click(AdminContent.auth.confirmDelete)
+
+    // Do it again but leave URL alias on
     // Create event
     .navigateTo(Env.baseURL + AddEventPage.URL)
     .typeText(AddEventPage.auth.titleInput, 'Test Event')
     .click(AddEventPage.auth.allDayCheck)
     .click(AddEventPage.auth.saveButton)
-
+    // Ensure is on page by clicking
+    .navigateTo(Env.baseURL + AdminContent.URL)
+    .click(await Selector('a').withText('Test Event'))
+    .click(EventItem.common.crumb)
     //Delete Event
     .navigateTo(Env.baseURL + AdminContent.URL)
     .click(await Selector('label').withText('Test Event').nextSibling())

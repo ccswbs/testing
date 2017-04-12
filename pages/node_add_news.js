@@ -10,6 +10,8 @@ module.exports = {
     externalLink:Selector('#edit-field-news-link-und-0-url'),
     keywords:Selector('#edit-field-tags-und'),
     saveButton:Selector('#edit-submit'),
-    wysiwyg:Selector('iframe.cke_wysiwyg')
+    wysiwyg:Selector('iframe.cke_wysiwyg'),
+    urlSettings:Selector('a').withText('URL path settings'),
+    autoURLCheck:Selector('#edit-path-pathauto')
   }
 }
