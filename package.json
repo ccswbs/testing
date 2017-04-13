@@ -9,7 +9,7 @@
     "docs": "concurrently 'npm run jsdoc' 'npm run server-jsdoc' 'npm run open-jsdoc'",
     "jsdoc": "jsdoc -c docs/conf.json -d docs .",
     "server-jsdoc": "node docs/server.js",
-    "open-jsdoc": "opn http://localhost:8080"
+    "open-jsdoc": "opn http://localhost:8080",
     "testcafe": "testcafe",
   },
   "author": "",
