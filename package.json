@@ -5,22 +5,31 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
+    "tap": "tap-nyan",
+    "docs": "concurrently 'npm run jsdoc' 'npm run server-jsdoc' 'npm run open-jsdoc'",
+    "jsdoc": "jsdoc -c docs/conf.json -d docs .",
+    "server-jsdoc": "node docs/server.js",
+    "open-jsdoc": "opn http://localhost:8080"
     "testcafe": "testcafe",
-    "tap": "tap-nyan"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "ava": "^0.19.1",
+    "jsdoc": "^3.4.3",
     "tap-nyan": "^1.1.0",
     "testcafe": "^0.13.0",
     "testcafe-browser-provider-nightmare": "0.0.4"
   },
   "dependencies": {
-    "nightmare": "^2.10.0"
+    "concurrently": "^3.4.0",
+    "connect": "^3.6.0",
+    "nightmare": "^2.10.0",
+    "opn-cli": "^3.1.0",
+    "serve-static": "^1.12.1"
   },
-  "ava":{
-    "files":[
+  "ava": {
+    "files": [
       "unit_tests/*.ava.js"
     ]
   }

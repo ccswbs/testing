@@ -39,5 +39,11 @@ jspm_packages
 # Environment-specific settings and credentials
 environment.js
 
+# Documentation
+docs/*
+!docs/conf.json
+!docs/server.js
+
+# Sublime Text meta files
 *.sublime-project
 *.sublime-workspace
