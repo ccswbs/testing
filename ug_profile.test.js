@@ -44,7 +44,7 @@ test('Test PP6', async t => {
 		.wait(500).click(PeoplePage.auth.panelsSaveButton)
 
 		// Assertions, change config, etc.
-		.wait(10000)
+		//.wait(10000)
 
 		// Teardown panel
 		.wait(500).click(PeoplePage.auth.panelsCustomizeButton)
@@ -79,7 +79,7 @@ test('Test PP1 Exposed Role Filter', async t => {
 		// Ensure filter does not exist
 		.navigateTo(Env.baseURL + PeoplePage.URL);
 
-	if(PeoplePage.common.viewFilters.innerHTML) {
+	if(PeoplePage.common.viewFilters) {
 		await t.expect(PeoplePage.common.viewFilters.innerHTML).notMatch(/[\s\S]*\"edit-field-profile-role-tid-wrapper\"[\s\S]*/g);
 	}
 
@@ -121,6 +121,7 @@ test('Test PP1 Exposed Role Filter', async t => {
 
 	await t
 		.navigateTo(Env.baseURL + '/node/' + nid + '/edit')
+		.wait(1000)
 		.click(AddProfilePage.auth.deleteButton)
 		.click(AddProfilePage.auth.confirmDeleteButton)
 });
