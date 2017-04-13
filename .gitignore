@@ -38,3 +38,6 @@ jspm_packages
 
 # Environment-specific settings and credentials
 environment.js
+
+*.sublime-project
+*.sublime-workspace
