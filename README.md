@@ -6,6 +6,11 @@ This project requires node.js to run. It was developed on v7.8.0 but will also w
 1. Clone the repo
 2. Run `npm install` and `npm install --dev` in the project directory
 3. Create an `environment.js` file using `environment.example.js` as a guide
+   - Replace "http://127.0.0.1/test" under baseURL with the URL you will be testing
+   - Replace "admin" under username with the username for the site you are testing
+   - Replace "password" under password with the password for the site you are testing
+   - **Note:** Your credentials and URL should be in quotes
+   - **Note:** You must add http:// or 'https://` in the baseURL or TestCafe will not work
 
 ## Usage
 Tests are run from the project directory with the `testcafe` command:
