@@ -19,10 +19,7 @@ module.exports = {
 	},
 	common:{
 		pageHeader:Selector('h1.page-header'),
-		month:{
-			grid:{
-				allDayEvent:Selector('td.multi-day').find('a')
-			}
-		}
+		viewFilters:Selector('.views-exposed-form'),
+		roleFilter:Selector('#edit-field-profile-role-tid')
 	}
 };

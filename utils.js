@@ -94,6 +94,42 @@ module.exports = {
 		}
 		return ret;
 	},
+	FormatDate:function(date = new Date(), format = "F j Y") {
+		var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+		var dayabbrs = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
+		var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		var monthabbrs = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+		var ret = "";
+		for(var i = 0; i < format.length; i++) {
+			switch(format[i]) {
+				case 'j':
+					ret += date.getDate();
+					break;
+				case 'd':
+					ret += date.getDate().toString().length == '1' ? '0' + date.getDate() : date.getDate();
+					break;
+				case 'l':
+					ret += days[date.getDay()];
+					break;
+				case 'D':
+					ret += dayabbrs[date.getDay()];
+					break;
+				case 'F':
+					ret += months[date.getMonth()];
+					break;
+				case 'M':
+					ret += monthabbrs[date.getMonth()];
+					break;
+				case 'Y':
+					ret += date.getFullYear();
+					break;
+				default:
+					ret += format[i];
+			}
+		}
+		return ret;
+	},
 	TLDS:tlds
 };
 

@@ -7,6 +7,10 @@ module.exports = {
 		operationSelect:Selector('#edit-operation'),
 		operationDeleteOption:Selector('option', { text:'Delete selected content' }),
 		updateButton:Selector('#edit-submit--2'),
-		confirmDelete:Selector('#edit-submit')
+		confirmDelete:Selector('#edit-submit'),
+		typeSelect:Selector('#edit-type'),
+		typeProfileOption:Selector('option', {text:'Profile'}),
+		filterButton:Selector('#edit-submit'),
+		selectAllCheck:Selector('input[title="Select all rows in this table"]').nth(1)
 	}
 };
