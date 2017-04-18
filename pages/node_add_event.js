@@ -5,9 +5,13 @@ module.exports = {
 	auth:{
 		pageTitle:Selector('h1.page-title'),
 		titleInput:Selector('#edit-title'),
+		categorySelect:Selector('#edit-field-event-category-und'),
+		categoryFirstOption:Selector('#edit-field-event-category-und').find('option').nth(1),
 		allDayCheck:Selector('#edit-field-event-date-und-0-all-day'),
 		saveButton:Selector('#edit-submit'),
 		urlSettings:Selector('a').withText('URL path settings'),
-    autoURLCheck:Selector('#edit-path-pathauto')
+    autoURLCheck:Selector('#edit-path-pathauto'),
+		startDateInput:Selector('#edit-field-event-date-und-0-value-datepicker-popup-0'),
+		endDateInput:Selector('#edit-field-event-date-und-0-value2-datepicker-popup-0')
 	}
 };

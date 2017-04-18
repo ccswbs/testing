@@ -8,6 +8,9 @@ module.exports = {
 		lastNameInput:Selector('#edit-field-profile-lastname-und-0-value'),
 		emailInput:Selector('#edit-field-profile-email-und-0-value'),
 		phoneInput:Selector('#edit-field-profile-telephonenumber-und-0-value'),
-		saveButton:Selector('#edit-submit')
+		saveButton:Selector('#edit-submit'),
+		adjunctFacultyRoleCheck:Selector('#edit-field-profile-role-und-16'),
+		deleteButton:Selector('#edit-delete', {visibilityCheck:true}),
+		confirmDeleteButton:Selector('#edit-submit') // Note: this is the same as the 'saveButton' but under a different name for context
 	}
 };
