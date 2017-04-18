@@ -2,8 +2,8 @@ const Env = require('./environment.js');
 const Util = require('./utils.js');
 const UserPage = require('./pages/user.js');
 const PeoplePage = require('./pages/people.js');
-const AddProfilePage = require('./pages/node_add_profile.js');
-const AdminContentPage = require('./pages/admin_content.js');
+const AddProfilePage = require('./pages/node/add/profile.js');
+const AdminContentPage = require('./pages/admin/content.js');
 import { Selector } from 'testcafe';
 
 fixture `UG Profile`
