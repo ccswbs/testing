@@ -2,11 +2,11 @@ const Env = require('./environment.js');
 const Util = require('./utils.js');
 const UserPage = require('./pages/user.js');
 const EventPage = require('./pages/events.js');
-const AddEventPage = require('./pages/node_add_event.js');
-const AdminContentPage = require('./pages/admin_content.js');
-const GenerateTermsPage = require('./pages/admin_config_development_generate_taxonomy.js');
-const AddEventCategoryTermPage = require('./pages/admin_structure_taxonomy_event_category_add.js');
-const EditTermPage = require('./pages/taxonomy_term_edit.js');
+const AddEventPage = require('./pages/node/add/event.js');
+const AdminContentPage = require('./pages/admin/content.js');
+const GenerateTermsPage = require('./pages/admin/config/development/generate/taxonomy.js');
+const AddEventCategoryTermPage = require('./pages/admin/structure/taxonomy/event_category/add.js');
+const EditTermPage = require('./pages/taxonomy/term/edit.js');
 
 import { Selector } from 'testcafe';
 
