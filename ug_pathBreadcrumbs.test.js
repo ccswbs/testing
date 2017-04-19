@@ -1,7 +1,7 @@
 const Env = require('./environment.js');
 const Util = require('./utils.js');
-const AddFAQ = require('./pages/node_add_faq.js');
-const AddService = require('./pages/node_add_services.js');
+const AddFAQPage = require('./pages/node_add_faq.js');
+const AddServicePage = require('./pages/node_add_services.js');
 const UserPage = require('./pages/user.js');
 const AddEventPage = require('./pages/node_add_event.js');
 const AddNewsPage = require('./pages/node_add_news.js');
@@ -9,11 +9,11 @@ const AddServiceCategory = require('./pages/admin_structure_taxonomy_service_cat
 const AddServiceAudience = require('./pages/admin_structure_taxonomy_service_audience_add.js');
 const ListServiceAudience = require('./pages/admin_structure_taxonomy_service_audience.js')
 const ListServiceCategory = require('./pages/admin_structure_taxonomy_service_category.js')
-const AdminContent = require('./pages/admin_content.js');
-const ServiceItem = require('./pages/service_item.js');
-const NewsItem = require('./pages/news_item.js');
-const FAQItem = require('./pages/FAQ_item.js');
-const EventItem = require('./pages/event_item.js');
+const AdminContentPage = require('./pages/admin_content.js');
+const FAQPage = require('./pages/faq.js');
+const NewsPage = require('./pages/news.js');
+const ServicePage = require('./pages/service.js');
+const EventPage = require('./pages/events.js');
 import { Selector } from 'testcafe';
 
 fixture `UG Breadcrumb`
@@ -36,45 +36,45 @@ fixture `UG Breadcrumb`
       .typeText(AddServiceAudience.auth.nameInput, 'Test Audience')
       .click(AddServiceAudience.auth.saveButton)
       //Create service
-      .navigateTo(Env.baseURL + AddService.URL)
-      .typeText(AddService.auth.titleInput, 'Test Service')
-      .click(AddService.auth.categorySelect)
-      .click(AddService.auth.testCategorySelect)
+      .navigateTo(Env.baseURL + AddServicePage.URL)
+      .typeText(AddServicePage.auth.titleInput, 'Test Service')
+      .click(AddServicePage.auth.categorySelect)
+      .click(AddServicePage.auth.testCategorySelect)
       // Turn off automatic URL generation
-      .click(AddService.auth.urlSettings)
-      .click(AddService.auth.autoURLCheck)
-      .click(AddService.auth.saveButton)
+      .click(AddServicePage.auth.urlSettings)
+      .click(AddServicePage.auth.autoURLCheck)
+      .click(AddServicePage.auth.saveButton)
       // Ensure crumb is on page by clicking
-      .navigateTo(Env.baseURL + AdminContent.URL)
+      .navigateTo(Env.baseURL + AdminContentPage.URL)
       .click(await Selector('a').withText('Test Service'))
-      .click(ServiceItem.common.crumb)
+      .click(ServicePage.common.crumb)
 
       //Delete service
-      .navigateTo(Env.baseURL + AdminContent.URL)
+      .navigateTo(Env.baseURL + AdminContentPage.URL)
       .click(await Selector('label').withText('Test Service').nextSibling())
-  		.click(AdminContent.auth.operationSelect)
-  		.click(AdminContent.auth.operationDeleteOption)
-  		.click(AdminContent.auth.updateButton)
-  		.click(AdminContent.auth.confirmDelete)
+  		.click(AdminContentPage.auth.operationSelect)
+  		.click(AdminContentPage.auth.operationDeleteOption)
+  		.click(AdminContentPage.auth.updateButton)
+  		.click(AdminContentPage.auth.confirmDelete)
 
       // Do it again with URL alias on
       //Create service
-      .navigateTo(Env.baseURL + AddService.URL)
-      .typeText(AddService.auth.titleInput, 'Test Service')
-      .click(AddService.auth.categorySelect)
-      .click(AddService.auth.testCategorySelect)
-      .click(AddService.auth.saveButton)
+      .navigateTo(Env.baseURL + AddServicePage.URL)
+      .typeText(AddServicePage.auth.titleInput, 'Test Service')
+      .click(AddServicePage.auth.categorySelect)
+      .click(AddServicePage.auth.testCategorySelect)
+      .click(AddServicePage.auth.saveButton)
       // Ensure crumb is on page by clicking
-      .navigateTo(Env.baseURL + AdminContent.URL)
+      .navigateTo(Env.baseURL + AdminContentPage.URL)
       .click(await Selector('a').withText('Test Service'))
-      .click(ServiceItem.common.crumb)
+      .click(ServicePage.common.crumb)
       //Delete service
-      .navigateTo(Env.baseURL + AdminContent.URL)
+      .navigateTo(Env.baseURL + AdminContentPage.URL)
       .click(await Selector('label').withText('Test Service').nextSibling())
-      .click(AdminContent.auth.operationSelect)
-      .click(AdminContent.auth.operationDeleteOption)
-      .click(AdminContent.auth.updateButton)
-      .click(AdminContent.auth.confirmDelete)
+      .click(AdminContentPage.auth.operationSelect)
+      .click(AdminContentPage.auth.operationDeleteOption)
+      .click(AdminContentPage.auth.updateButton)
+      .click(AdminContentPage.auth.confirmDelete)
 
       //Delete taxonomy information
       .navigateTo(Env.baseURL + ListServiceAudience.URL)
@@ -101,46 +101,46 @@ test('FAQ breadcrumb test', async t => {
     // Ensure login successful
     .expect(UserPage.auth.pageHeader.innerText).eql(Env.creds.admin.username)
     // Create FAQ
-    .navigateTo(Env.baseURL + AddFAQ.URL)
-    .typeText(AddFAQ.auth.questionInput, 'Test Question')
-    .switchToIframe(AddFAQ.auth.iframe)
-    .typeText(AddFAQ.auth.answer, 'Test Answer')
+    .navigateTo(Env.baseURL + AddFAQPage.URL)
+    .typeText(AddFAQPage.auth.questionInput, 'Test Question')
+    .switchToIframe(AddFAQPage.auth.iframe)
+    .typeText(AddFAQPage.auth.answer, 'Test Answer')
     .switchToMainWindow()
     // Turn off automatic URL generation
-    .click(AddFAQ.auth.urlSettings)
-    .click(AddFAQ.auth.autoURLCheck)
-    .click(AddFAQ.auth.saveButton)
+    .click(AddFAQPage.auth.urlSettings)
+    .click(AddFAQPage.auth.autoURLCheck)
+    .click(AddFAQPage.auth.saveButton)
     // Ensure is on page by clicking
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('a').withText('Test Question'))
-    .click(FAQItem.common.crumb)
+    .click(FAQPage.common.crumb)
     //Delete FAQ
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('label').withText('Test Question').nextSibling())
-    .click(AdminContent.auth.operationSelect)
-    .click(AdminContent.auth.operationDeleteOption)
-    .click(AdminContent.auth.updateButton)
-    .click(AdminContent.auth.confirmDelete)
+    .click(AdminContentPage.auth.operationSelect)
+    .click(AdminContentPage.auth.operationDeleteOption)
+    .click(AdminContentPage.auth.updateButton)
+    .click(AdminContentPage.auth.confirmDelete)
 
     // Do it again with URL alias on
     // Create FAQ
-    .navigateTo(Env.baseURL + AddFAQ.URL)
-    .typeText(AddFAQ.auth.questionInput, 'Test Question')
-    .switchToIframe(AddFAQ.auth.iframe)
-    .typeText(AddFAQ.auth.answer, 'Test Answer')
+    .navigateTo(Env.baseURL + AddFAQPage.URL)
+    .typeText(AddFAQPage.auth.questionInput, 'Test Question')
+    .switchToIframe(AddFAQPage.auth.iframe)
+    .typeText(AddFAQPage.auth.answer, 'Test Answer')
     .switchToMainWindow()
-    .click(AddFAQ.auth.saveButton)
+    .click(AddFAQPage.auth.saveButton)
     // Ensure is on page by clicking
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('a').withText('Test Question'))
-    .click(FAQItem.common.crumb)
+    .click(FAQPage.common.crumb)
     //Delete FAQ
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('label').withText('Test Question').nextSibling())
-    .click(AdminContent.auth.operationSelect)
-    .click(AdminContent.auth.operationDeleteOption)
-    .click(AdminContent.auth.updateButton)
-    .click(AdminContent.auth.confirmDelete);
+    .click(AdminContentPage.auth.operationSelect)
+    .click(AdminContentPage.auth.operationDeleteOption)
+    .click(AdminContentPage.auth.updateButton)
+    .click(AdminContentPage.auth.confirmDelete);
 });
 
 test('News breadcrumb test', async t => {
@@ -160,16 +160,16 @@ test('News breadcrumb test', async t => {
     .click(AddNewsPage.auth.autoURLCheck)
 		.click(AddNewsPage.auth.saveButton)
     // Ensure is on page by clicking
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('a').withText('Test News'))
-    .click(NewsItem.common.crumb)
+    .click(NewsPage.common.crumb)
     //Delete News
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('label').withText('Test News').nextSibling())
-    .click(AdminContent.auth.operationSelect)
-    .click(AdminContent.auth.operationDeleteOption)
-    .click(AdminContent.auth.updateButton)
-    .click(AdminContent.auth.confirmDelete)
+    .click(AdminContentPage.auth.operationSelect)
+    .click(AdminContentPage.auth.operationDeleteOption)
+    .click(AdminContentPage.auth.updateButton)
+    .click(AdminContentPage.auth.confirmDelete)
 
     // Do it again, leaving URL alias on
     // Create news item
@@ -178,16 +178,16 @@ test('News breadcrumb test', async t => {
     .typeText(AddNewsPage.auth.writtenBy, 'Test Author')
     .click(AddNewsPage.auth.saveButton)
     // Ensure is on page by clicking
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('a').withText('Test News'))
-    .click(NewsItem.common.crumb)
+    .click(NewsPage.common.crumb)
     //Delete News
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('label').withText('Test News').nextSibling())
-    .click(AdminContent.auth.operationSelect)
-    .click(AdminContent.auth.operationDeleteOption)
-    .click(AdminContent.auth.updateButton)
-    .click(AdminContent.auth.confirmDelete);
+    .click(AdminContentPage.auth.operationSelect)
+    .click(AdminContentPage.auth.operationDeleteOption)
+    .click(AdminContentPage.auth.updateButton)
+    .click(AdminContentPage.auth.confirmDelete);
 
 });
 
@@ -208,16 +208,16 @@ test('Event breadcrumb test', async t => {
     .click(AddEventPage.auth.autoURLCheck)
     .click(AddEventPage.auth.saveButton)
     // Ensure is on page by clicking
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('a').withText('Test Event'))
-    .click(EventItem.common.crumb)
+    .click(EventPage.common.crumb)
     //Delete Event
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('label').withText('Test Event').nextSibling())
-    .click(AdminContent.auth.operationSelect)
-    .click(AdminContent.auth.operationDeleteOption)
-    .click(AdminContent.auth.updateButton)
-    .click(AdminContent.auth.confirmDelete)
+    .click(AdminContentPage.auth.operationSelect)
+    .click(AdminContentPage.auth.operationDeleteOption)
+    .click(AdminContentPage.auth.updateButton)
+    .click(AdminContentPage.auth.confirmDelete)
 
     // Do it again but leave URL alias on
     // Create event
@@ -226,14 +226,14 @@ test('Event breadcrumb test', async t => {
     .click(AddEventPage.auth.allDayCheck)
     .click(AddEventPage.auth.saveButton)
     // Ensure is on page by clicking
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('a').withText('Test Event'))
-    .click(EventItem.common.crumb)
+    .click(EventPage.common.crumb)
     //Delete Event
-    .navigateTo(Env.baseURL + AdminContent.URL)
+    .navigateTo(Env.baseURL + AdminContentPage.URL)
     .click(await Selector('label').withText('Test Event').nextSibling())
-    .click(AdminContent.auth.operationSelect)
-    .click(AdminContent.auth.operationDeleteOption)
-    .click(AdminContent.auth.updateButton)
-    .click(AdminContent.auth.confirmDelete);
+    .click(AdminContentPage.auth.operationSelect)
+    .click(AdminContentPage.auth.operationDeleteOption)
+    .click(AdminContentPage.auth.updateButton)
+    .click(AdminContentPage.auth.confirmDelete);
 });

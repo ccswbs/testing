@@ -14,6 +14,9 @@ module.exports = {
     panelsAddToBottom:Selector('#panels-ipe-regionid-bottom').find('a[title="Add new pane"]'),
 	},
 	common:{
+    pageTitle:Selector('h1.page-header'),
+    writtenBy:Selector('div.media-meta'),
+    crumb:Selector('ol.breadcrumb').find('a').withText('News'),
 		pageHeader:Selector('h1.page-header'),
     noResults:Selector('div.view-empty'),
     newsListingArea:Selector('div.view-content'),
