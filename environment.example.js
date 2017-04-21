@@ -10,6 +10,11 @@ module.exports = {
 		author:{
 			username:"author", // TODO: update "author" string to author's username
 			password:"password" // TODO: update "password" string to author's password
+		},
+		db:{
+			username:"mysql_admin", // TODO: update "mysql_admin" string to MySQL username
+			password:"password", // TODO: update "password" string to MySQL password
+			database:"testdb" // TODO: update "testdb" string to MySQL database name for your test site
 		}
 		// TODO: add any additional accounts following the pattern above
 	},
