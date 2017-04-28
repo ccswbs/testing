@@ -2,12 +2,14 @@ const mysql = require('promise-mysql');
 const request = require('request-promise-native');
 
 const Env = require('./environment.js');
+const Util = require('./utils.js');
 //const UserPage = require('./pages/user.js');
 
 const PostPath = "/testcafe";
 const LoginEndpoint = "/user/login";
 const TokenEndpoint = "/user/token.json";
 const NodeEndpoint = "/node";
+const TermEndpoint = "/taxonomy_term";
 
 module.exports = {
 	Login:async function(t, user, pass) {
@@ -20,137 +22,49 @@ module.exports = {
 			// Ensure login successful
 			.expect(UserPage.auth.pageHeader.innerText).eql(user);
 	},
-	CreateTerm:async function(vid, name) {
-		var db;
-		var err = false;
-		var tid = -1;
+	CreateTerm:async function(vid, name, desc) {
+		// Authenticate REST
+		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
 
-		await dbConnect()
-		.then(function(con) {
-			db = con;
-
-			var data = [parseInt(vid), name, 'description of ' + name];
-			var sql = mysql.format("INSERT INTO taxonomy_term_data(vid, name, description, format, weight) VALUES(?, ?, ?, 'plain_text', 0)", data);
-
-			return db.query(sql);
-		}).then(function(rows) {
-			tid = rows.insertId;
-
-			var data = [tid, 0];
-			var sql = mysql.format("INSERT INTO taxonomy_term_hierarchy(tid, parent) VALUES(?, ?)", data);
-
-			return db.query(sql);
-		}).catch(function(error) {
-			err = error;
-		}).then(function(rows) {
-			db.end().then(function(error) {
-				if(error) {
-					console.log(error);
-					err = error;
-				}
-			});
+		// Post to node
+		var tid;
+		await request({
+			uri:Env.baseURL + PostPath + TermEndpoint,
+			headers:headers,
+			method:"POST",
+			json:true,
+			body:{
+				vid:vid,
+				name:name,
+				description:desc
+			}
+		}).then(function(body) {
+			tid = body[0];
+		}).catch(function(err) {
+			if(err) console.log(err.message);
 		});
-		return err || tid;
+
+		return tid;
 	},
 	DeleteTerm:async function(tid) {
-		var db;
-		var err = false;
+		// Authenticate REST
+		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
 
-		await dbConnect()
-		.then(function(con) {
-			db = con;
-
-			var data = [parseInt(tid)];
-			var sql = mysql.format("DELETE FROM taxonomy_term_data WHERE tid=?", data);
-
-			return db.query(sql);
-		}).then(function(rows) {
-			var data = [parseInt(tid)];
-			var sql = mysql.format("DELETE FROM taxonomy_term_hierarchy WHERE tid=?", data);
-
-			return db.query(sql);
-		}).catch(function(error) {
-			err = error;
-		}).then(function(rows) {
-			db.end().then(function(error) {
-				if(error) {
-					console.log(error);
-					err = error;
-				}
-			});
+		// Post to node
+		var res = false;
+		await request({
+			uri:Env.baseURL + PostPath + TermEndpoint + "/" + tid,
+			headers:headers,
+			method:"DELETE",
+			json:true,
+			body:{}
+		}).then(function(body) {
+			res = true;
+		}).catch(function(err) {
+			if(err) console.log(err.message);
 		});
-		return err || true;
-	},
-	CreatePage:async function(fields) {
-		var db, vid, nid;
-		var err = false;
 
-		var promise = await dbConnect()
-		.then(function(con) { // Create revision
-			db = con;
-
-			var data = [fields.title, " ", drupalTimestamp()];
-			var sql = mysql.format("INSERT INTO node_revision(title, log, timestamp) VALUES(?, ?, ?)", data);
-
-			return db.query(sql);
-		})
-		.then(function(rows) { // Create node using vid from previous transaction
-			vid = rows.insertId;
-
-			var data = [vid, fields.title, drupalTimestamp(), drupalTimestamp()];
-			var sql = mysql.format("INSERT INTO node(vid, type, language, title, uid, status, created, changed) VALUES(?, 'page', 'und', ?, 1, 1, ?, ?)", data);
-
-			return db.query(sql);
-		}).then(function(rows) { // Update revision with node id
-			nid = rows.insertId;
-
-			var data = [nid, vid];
-			var sql = mysql.format("UPDATE node_revision SET nid=? WHERE vid=?", data);
-
-			return db.query(sql);
-		}).then(function(rows) { // Add URL alias
-			var data = ['node/' + nid, fields.title.toLowerCase().replace(/\s/g, '-')];
-			var sql = mysql.format("INSERT INTO url_alias(source, alias, language) VALUES(?, ?, 'und')", data);
-
-			return db.query(sql);
-		}).then(function(rows) { // Add body field if it exists
-			if(fields.body) {
-				var data = [nid, fields.body.value, fields.body.format];
-				var sql = mysql.format("INSERT INTO field_data_field_page_body(entity_type, bundle, entity_id, language, delta, field_page_body_value, field_page_body_summary, field_page_body_format) VALUES('node', 'page', ?, 'und', 0, ?, ' ', ?)", data);
-
-				return db.query(sql);
-			}
-		}).catch(function(error) { // Catch any errors
-			err = error;
-		}).then(function() { // Close MySQL connection
-			db.end().then(function(error) {
-				if(error) {
-					console.log(error);
-					err = error;
-				}
-			});
-		});
-		return err || nid;
-	},
-	CreateNews:async function(fields) {
-		var db, vid, nid;
-		var err = false;
-
-		var promise = await dbConnect()
-		.then(function(con) {
-			db = con;
-
-			var data = [fields.title, " ", drupalTimestamp()];
-			var sql = mysql.format("INSERT INTO node_revision(title, log, timestamp) VALUES(?, ?, ?)", data);
-
-			return db.query(sql);
-		})
-		.then(function(rows) {
-			vid = rows.insertId;
-
-			var data = [vid, fields.title, drupalTimestamp(), drupalTimestamp()];
-			var sql = mysql.format("INSERT INTO node(vid, type, language, title, uid, status, created")
-		})
+		return res;
 	},
 	CreateNode:async function(node_data) {
 		var data;
@@ -164,34 +78,18 @@ module.exports = {
 			case "event":
 				data = eventFormat(node_data);
 				break;
+			case "profile":
+				data = profileFormat(node_data);
+				break;
+			case "faq":
+				data = faqFormat(node_data);
+				break;
 			default:
 				return "Invalid node type."
 		}
 
-		// Post to login
-		var headers = {};
-		await request({
-			uri:Env.baseURL + PostPath + LoginEndpoint,
-			headers:headers,
-			method:"POST",
-			json:true,
-			body:{
-				"username":"admin",
-				"password":"password"
-			}
-		}).then(function(body) {
-			headers["Cookie"] = body.session_name + "=" + body.sessid;
-		});
-
-		// Post to token
-		await request({
-			uri:Env.baseURL + PostPath + TokenEndpoint,
-			headers:headers,
-			method:"POST",
-			json:true
-		}).then(function(body) {
-			headers["X-CSRF-Token"] = body.token;
-		});
+		// Authenticate REST
+		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
 
 		// Post to node
 		var nid = -1;
@@ -208,20 +106,56 @@ module.exports = {
 		});
 
 		return nid;
+	},
+	DeleteNode:async function(nid) {
+		// Authenticate REST
+		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
+
+		// Post to node
+		var res = false;
+		await request({
+			uri:Env.baseURL + PostPath + NodeEndpoint + "/" + nid,
+			headers:headers,
+			method:"DELETE",
+			json:true,
+			body:{}
+		}).then(function(body) {
+			res = true;
+		}).catch(function(err) {
+			if(err) console.log(err.message);
+		});
+
+		return res;
 	}
 };
 
-async function dbConnect() {
-	return mysql.createConnection({
-		host: 'localhost',
-		user: Env.creds.db.username,
-		password: Env.creds.db.password,
-		database: Env.creds.db.database
+async function getLoginHeaders(user, pass) {
+	// Post to login
+	var headers = {};
+	await request({
+		uri:Env.baseURL + PostPath + LoginEndpoint,
+		headers:headers,
+		method:"POST",
+		json:true,
+		body:{
+			"username":user,
+			"password":pass
+		}
+	}).then(function(body) {
+		headers["Cookie"] = body.session_name + "=" + body.sessid;
 	});
-}
 
-function drupalTimestamp() {
-	return Math.round((+ new Date())/1000);
+	// Post to token
+	await request({
+		uri:Env.baseURL + PostPath + TokenEndpoint,
+		headers:headers,
+		method:"POST",
+		json:true
+	}).then(function(body) {
+		headers["X-CSRF-Token"] = body.token;
+	});
+
+	return headers;
 }
 
 // TODO: Add support for file attachments
@@ -237,7 +171,7 @@ function drupalTimestamp() {
  * 		tid:"21", // Make sure this exists or you will get an error!
  * 		body:{
  * 			value:"Main page text.",
- *    		summary:"Main page summary.",
+ *    		summary:this.value,
  *       	format:"full_html|filtered_html|plain_text"	
  * 		}
  * 		tags:"test, tags, here"
@@ -300,11 +234,12 @@ function pageFormat(data) {
  * 
  */
 function newsFormat(data) {
+	data.body = data.body || {};
 	return {
 		type:"news",
 		title:data.title,
 		field_news_tags:{
-			und:data.tid
+			und:data.tid || "_none"
 		},
 		field_news_writer:{
 			und:[
@@ -376,7 +311,13 @@ function newsFormat(data) {
  * 	}
  */
 function eventFormat(data) {
-	return {
+	data.start_date = data.start_date || {};
+	data.end_date = data.end_date || {};
+	data.location = data.location || {};
+	data.body = data.body || {};
+	data.link = data.link || {};
+
+	var ret = {
 		type:"event",
 		title:data.title,
 		field_event_category:{
@@ -385,15 +326,15 @@ function eventFormat(data) {
 		field_event_date:{
 			und:[
 				{
-					all_day:data.all_day,
-					show_todate:data.show_todate,
+					all_day:data.all_day || false,
+					show_todate:data.show_todate || true,
 					value:{
-						date:data.start_date.date,
-						time:data.start_date.time
+						date:data.start_date.date || Util.FormatDate(new Date(), "M j Y"),
+						time:data.start_date.time || "12:00pm"
 					},
 					value2:{
-						date:data.end_date.date,
-						time:data.end_date.time
+						date:data.end_date.date || Util.FormatDate(new Date(), "M j Y"),
+						time:data.end_date.time || "1:00pm"
 					}
 				}
 			]
@@ -401,32 +342,34 @@ function eventFormat(data) {
 		field_event_location:{
 			und:[
 				{
-					value:data.location.value,
-					format:data.location.format
+					value:data.location.value || "",
+					format:data.location.format || "filtered_html"
 				}
 			]
 		},
 		field_event_body:{
 			und:[
 				{
-					summary:data.body.summary,
-					value:data.body.value,
-					format:data.body.format
+					value:data.body.value || "",
+					summary:data.body.summary || "",
+					format:data.body.format || "filtered_html"
 				}
 			]
 		},
 		field_event_link:{
 			und:[
 				{
-					title:data.link.title,
-					url:data.link.url
+					title:data.link.title || "",
+					url:data.link.url || ""
 				}
 			]
 		},
 		field_tags:{
-			und:data.tags
+			und:data.tags || ""
 		}
 	};
+
+	return ret;
 }
 
 /**
@@ -468,6 +411,9 @@ function eventFormat(data) {
  * 	}
  */
 function profileFormat(data) {
+	data.role = data.role || {};
+	data.summary = data.summary || {};
+	data.info_fields = data.info_fields || {};
 	var post = {
 		type:"profile",
 		field_profile_name:{
@@ -486,34 +432,69 @@ function profileFormat(data) {
 		},
 		field_profile_role:{
 			und:{
-				"14":data.role.staff ? 14 : false,
-				"15":data.role.faculty ? 15 : false,
-				"16":data.role.adjunct_faculty ? 16 : false,
-				"17":data.role.sessional ? 17 : false,
-				"18":data.role.grad_student ? 18 : false,
-				"19":data.role.post_doc ? 19 : false,
-				"20":data.role.professor ? 20 : false
+				"14":data.role.staff ? 14 : undefined,
+				"15":data.role.faculty ? 15 : undefined,
+				"16":data.role.adjunct_faculty ? 16 : undefined,
+				"17":data.role.sessional ? 17 : undefined,
+				"18":data.role.grad_student ? 18 : undefined,
+				"19":data.role.post_doc ? 19 : undefined,
+				"20":data.role.professor ? 20 : undefined
 			}
 		},
 		field_profile_category:{
-			und:data.tid
+			und:data.tid || "_none"
 		},
 		field_profile_summary:{
 			und:[
 				{
-					value:data.summary.body,
-					format:data.summary.format
+					value:data.summary.body || "",
+					format:data.summary.format || "filtered_html"
 				}
 			]
 		},
 		field_tags:{
-			und:data.tags
+			und:data.tags || ""
 		}
 	};
 
 	for(var field in data.info_fields) {
-
+		post["field_profile_" + field] = data.info_fields[field];
 	}
 
-	return post
+	return post;
+}
+
+/**
+ * FAQ Converts simplified JSON into the proper format to post to Drupal Servicesrep
+ * @param  {object} data Simplified JSON object containing node data
+ * @return {object}      JSON data in proper format to be posted
+ *
+ * Simplified structure:
+ * 	{
+ * 		tid:"21|_none",
+ * 		question:"Lorem ipsum dolor sit amet?",
+ * 		answer:{
+ * 			value:"Text to answer the question here.",
+ * 			format:"full_html|filtered_html|plain_text"
+ * 		},
+ * 		tags:"test, tags, here"
+ * 	}
+ */
+function faqFormat(data) {
+	return {
+		type:"faq",
+		tid:data.tid || "_none",
+		title:data.question,
+		field_faq_answer:{
+			und:[
+				{
+					value:data.answer.value,
+					format:data.answer.format || "filtered_html"
+				}
+			]
+		},
+		field_tags:{
+			und:data.tags || ""
+		}
+	};
 }
