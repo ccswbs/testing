@@ -1,4 +1,3 @@
-const mysql = require('promise-mysql');
 const request = require('request-promise-native');
 
 const Env = require('./environment.js');
