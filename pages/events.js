@@ -14,6 +14,7 @@ module.exports = {
 			grid:{
 				allDayEvent:Selector('td.multi-day').find('a')
 			}
-		}
+		},
+		relatedKeywords:Selector('.view-e6 .view-content')
 	}
 };

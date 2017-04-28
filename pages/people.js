@@ -20,6 +20,7 @@ module.exports = {
 	common:{
 		pageHeader:Selector('h1.page-header'),
 		viewFilters:Selector('.views-exposed-form'),
-		roleFilter:Selector('#edit-field-profile-role-tid')
+		roleFilter:Selector('#edit-field-profile-role-tid'),
+		relatedKeywords:Selector('.view-pp4 .view-content')
 	}
 };
