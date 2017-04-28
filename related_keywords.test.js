@@ -2,6 +2,7 @@ const Env = require('./environment.js');
 const Util = require('./utils.js');
 const Actions = require('./actions.js');
 const UserPage = require('./pages/user.js');
+const FAQPage = require('./pages/faq.js');
 const NewsPage = require('./pages/news.js');
 const EventPage = require('./pages/events.js');
 const PeoplePage = require('./pages/people.js');
@@ -15,6 +16,8 @@ fixture `UG Profile`
 
 test
 	.before(async t => {
+		// Setup content ahead of the actual test
+
 		// Actions.CreateNode returns a node ID that is then
 		// stored in t.ctx.[type]_nid to be referenced later
 		// for testing and deletion
@@ -56,7 +59,8 @@ test
 			tags:tags
 		});
 	})('Related keywords on E6, F4, PP4, and N7 are consistent', async t => {
-		var pattern = /^(\w*,\s*)*\w*$/g; // Regex to match comma
+		// Regex to match current standard format (comma-separated list)
+		var pattern = /^(\w*,\s*)*\w*$/g;
 
 		await t
 			// Test News related keywords for pattern
@@ -69,8 +73,8 @@ test
 			.navigateTo(Env.baseURL + '/node/' + await t.ctx.profile_nid)
 			.expect(PeoplePage.common.relatedKeywords.innerText).match(pattern)
 			// Test FAQ related keywords for pattern
-			//.navigateTo(Env.baseURL + '/node/' + await t.ctx.faq_nid)
-			//.expect(FAQPage)
+			.navigateTo(Env.baseURL + '/node/' + await t.ctx.faq_nid)
+			.expect(FAQPage.common.relatedKeywords.innerText).match(pattern)
 	})
 	.after(async t => {
 		await Actions.DeleteNode(t.ctx.event_nid);
