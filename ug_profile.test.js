@@ -1,5 +1,6 @@
 const Env = require('./environment.js');
 const Util = require('./utils.js');
+const Actions = require('./actions.js');
 const UserPage = require('./pages/user.js');
 const PeoplePage = require('./pages/people.js');
 const AddProfilePage = require('./pages/node/add/profile.js');
@@ -7,15 +8,8 @@ const AdminContentPage = require('./pages/admin/content.js');
 import { Selector } from 'testcafe';
 
 fixture `UG Profile`
-	.page(Env.baseURL + UserPage.URL)
 	.beforeEach(async t => {
-		await t
-			// Authenticate
-			.typeText(UserPage.anon.userInput, Env.creds.admin.username)
-			.typeText(UserPage.anon.passInput, Env.creds.admin.password)
-			.click(UserPage.anon.submitButton)
-			// Ensure login successful
-			.expect(UserPage.auth.pageHeader.innerText).eql(Env.creds.admin.username)
+		await Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 	})
 	.afterEach(async t => {
 		await t

@@ -24,8 +24,11 @@
   "dependencies": {
     "concurrently": "^3.4.0",
     "connect": "^3.6.0",
+    "drush-node": "^0.1.3",
     "nightmare": "^2.10.0",
     "opn-cli": "^3.1.0",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.3",
     "serve-static": "^1.12.1"
   },
   "ava": {

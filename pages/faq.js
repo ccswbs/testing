@@ -1,7 +1,7 @@
 import { Selector } from 'testcafe';
 
 module.exports = {
-	URL:'/events',
+	URL:'/faq',
 	anon:{
 		errorMessage:Selector('.alert')
 	},
@@ -10,11 +10,6 @@ module.exports = {
 	},
 	common:{
 		pageHeader:Selector('h1.page-header'),
-		month:{
-			grid:{
-				allDayEvent:Selector('td.multi-day').find('a')
-			}
-		},
-		relatedKeywords:Selector('.view-e6 .view-content')
+		relatedKeywords:Selector('.view-f4 .view-content')
 	}
 };

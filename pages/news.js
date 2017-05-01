@@ -19,6 +19,7 @@ module.exports = {
     newsListingArea:Selector('div.view-content'),
     newsListingTitle:Selector('h2.media-heading'),
     newsListingTitleLink:Selector('h2.media-heading').find('a'),
-    newsAuthor:Selector('div.media-meta')
+    newsAuthor:Selector('div.media-meta'),
+    relatedKeywords:Selector('.view-n7 .view-content')
 	}
 }
