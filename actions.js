@@ -10,124 +10,6 @@ const TokenEndpoint = "/user/token.json";
 const NodeEndpoint = "/node";
 const TermEndpoint = "/taxonomy_term";
 
-module.exports = {
-	Login:async function(t, user, pass) {
-		await t
-			.navigateTo(Env.baseURL + UserPage.URL)
-			// Authenticate
-			.typeText(UserPage.anon.userInput, user)
-			.typeText(UserPage.anon.passInput, pass)
-			.click(UserPage.anon.submitButton)
-			// Ensure login successful
-			.expect(UserPage.auth.pageHeader.innerText).eql(user);
-	},
-	CreateTerm:async function(vid, name, desc) {
-		// Authenticate REST
-		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
-
-		// Post to node
-		var tid;
-		await request({
-			uri:Env.baseURL + PostPath + TermEndpoint,
-			headers:headers,
-			method:"POST",
-			json:true,
-			body:{
-				vid:vid,
-				name:name,
-				description:desc
-			}
-		}).then(function(body) {
-			tid = body[0];
-		}).catch(function(err) {
-			if(err) console.log(err.message);
-		});
-
-		return tid;
-	},
-	DeleteTerm:async function(tid) {
-		// Authenticate REST
-		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
-
-		// Post to node
-		var res = false;
-		await request({
-			uri:Env.baseURL + PostPath + TermEndpoint + "/" + tid,
-			headers:headers,
-			method:"DELETE",
-			json:true,
-			body:{}
-		}).then(function(body) {
-			res = true;
-		}).catch(function(err) {
-			if(err) console.log(err.message);
-		});
-
-		return res;
-	},
-	CreateNode:async function(node_data) {
-		var data;
-		switch(node_data.type) {
-			case "page":
-				data = pageFormat(node_data);
-				break;
-			case "news":
-				data = newsFormat(node_data);
-				break;
-			case "event":
-				data = eventFormat(node_data);
-				break;
-			case "profile":
-				data = profileFormat(node_data);
-				break;
-			case "faq":
-				data = faqFormat(node_data);
-				break;
-			default:
-				return "Invalid node type."
-		}
-
-		// Authenticate REST
-		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
-
-		// Post to node
-		var nid = -1;
-		await request({
-			uri:Env.baseURL + PostPath + NodeEndpoint,
-			headers:headers,
-			method:"POST",
-			json:true,
-			body:data
-		}).then(function(body) {
-			nid = body.nid;
-		}).catch(function(err) {
-			if(err) console.log(err.message);
-		});
-
-		return nid;
-	},
-	DeleteNode:async function(nid) {
-		// Authenticate REST
-		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
-
-		// Post to node
-		var res = false;
-		await request({
-			uri:Env.baseURL + PostPath + NodeEndpoint + "/" + nid,
-			headers:headers,
-			method:"DELETE",
-			json:true,
-			body:{}
-		}).then(function(body) {
-			res = true;
-		}).catch(function(err) {
-			if(err) console.log(err.message);
-		});
-
-		return res;
-	}
-};
-
 async function getLoginHeaders(user, pass) {
 	// Post to login
 	var headers = {};
@@ -178,23 +60,25 @@ async function getLoginHeaders(user, pass) {
  * 
  */
 function pageFormat(data) {
+	data.body = data.body || {};
+
 	return {
 		type:"page",
 		title:data.title,
 		field_page_body:{
 			und:[
 				{
-					"summary":data.body.summary,
-					"value":data.body.value,
-					"format":data.body.format
+					"summary":data.body.summary || "",
+					"value":data.body.value || "",
+					"format":data.body.format || "filtered_html"
 				}
 			]
 		},
 		field_page_category:{
-			und:data.tid
+			und:data.tid || "_none"
 		},
 		field_tags:{
-			und:data.tags
+			und:data.tags || ""
 		}
 	};
 }
@@ -225,10 +109,10 @@ function pageFormat(data) {
  * 		body:{
  * 			value:"News article text.",
  * 			summary:"News article summary.",
- *     		format:"full_html|filtered_html|plain_text" // Required
+ *     		format:"full_html|filtered_html|plain_text"
  * 		}
  * 		tags:"test, tags, here",
- * 		link:"http://www.example.com"
+ * 		url:"http://www.example.com"
  * 	}
  * 
  */
@@ -325,8 +209,8 @@ function eventFormat(data) {
 		field_event_date:{
 			und:[
 				{
-					all_day:data.all_day || false,
-					show_todate:data.show_todate || true,
+					all_day:data.all_day === false ? false : data.all_day || false,
+					show_todate:data.show_todate === false ? false : true,
 					value:{
 						date:data.start_date.date || Util.FormatDate(new Date(), "M j Y"),
 						time:data.start_date.time || "12:00pm"
@@ -497,3 +381,126 @@ function faqFormat(data) {
 		}
 	};
 }
+
+module.exports = {
+	Login:async function(t, user, pass) {
+		await t
+			.navigateTo(Env.baseURL + UserPage.URL)
+			// Authenticate
+			.typeText(UserPage.anon.userInput, user)
+			.typeText(UserPage.anon.passInput, pass)
+			.click(UserPage.anon.submitButton)
+			// Ensure login successful
+			.expect(UserPage.auth.pageHeader.innerText).eql(user);
+	},
+	CreateTerm:async function(vid, name, desc) {
+		// Authenticate REST
+		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
+
+		// Post to node
+		var tid;
+		await request({
+			uri:Env.baseURL + PostPath + TermEndpoint,
+			headers:headers,
+			method:"POST",
+			json:true,
+			body:{
+				vid:vid,
+				name:name,
+				description:desc
+			}
+		}).then(function(body) {
+			tid = body[0];
+		}).catch(function(err) {
+			if(err) console.log(err.message);
+		});
+
+		return tid;
+	},
+	DeleteTerm:async function(tid) {
+		// Authenticate REST
+		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
+
+		// Post to node
+		var res = false;
+		await request({
+			uri:Env.baseURL + PostPath + TermEndpoint + "/" + tid,
+			headers:headers,
+			method:"DELETE",
+			json:true,
+			body:{}
+		}).then(function(body) {
+			res = true;
+		}).catch(function(err) {
+			if(err) console.log(err.message);
+		});
+
+		return res;
+	},
+	CreateNode:async function(node_data) {
+		var data;
+		switch(node_data.type) {
+			case "page":
+				data = pageFormat(node_data);
+				break;
+			case "news":
+				data = newsFormat(node_data);
+				break;
+			case "event":
+				data = eventFormat(node_data);
+				break;
+			case "profile":
+				data = profileFormat(node_data);
+				break;
+			case "faq":
+				data = faqFormat(node_data);
+				break;
+			default:
+				return "Invalid node type."
+		}
+
+		// Authenticate REST
+		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
+
+		// Post to node
+		var nid = -1;
+		await request({
+			uri:Env.baseURL + PostPath + NodeEndpoint,
+			headers:headers,
+			method:"POST",
+			json:true,
+			body:data
+		}).then(function(body) {
+			nid = body.nid;
+		}).catch(function(err) {
+			if(err) console.log(err.message);
+		});
+
+		return nid;
+	},
+	DeleteNode:async function(nid) {
+		// Authenticate REST
+		var headers = await getLoginHeaders(Env.creds.admin.username, Env.creds.admin.password);
+
+		// Post to node
+		var res = false;
+		await request({
+			uri:Env.baseURL + PostPath + NodeEndpoint + "/" + nid,
+			headers:headers,
+			method:"DELETE",
+			json:true,
+			body:{}
+		}).then(function(body) {
+			res = true;
+		}).catch(function(err) {
+			if(err) console.log(err.message);
+		});
+
+		return res;
+	},
+	pageFormat:pageFormat,
+	newsFormat:newsFormat,
+	eventFormat:eventFormat,
+	profileFormat:profileFormat,
+	faqFormat:faqFormat
+};
