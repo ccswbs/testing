@@ -9,10 +9,7 @@ const PeoplePage = require('./pages/people.js');
 import { Selector } from 'testcafe';
 
 fixture `UG Profile`
-	.page(Env.baseURL + UserPage.URL)
-	.beforeEach(async t => {
-		
-	});
+	.page(Env.baseURL + UserPage.URL);
 
 test
 	.before(async t => {
