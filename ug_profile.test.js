@@ -110,10 +110,20 @@ test('Role filter is hidden if no profiles with role term exist', async t => {
 });
 
 test('Search by last name exists on PP1, PP1B, PP5', async t => {
+	//Create Names for dummy profiles
 	const firstName = Util.RandomName(4, 10);
 	const lastName = Util.RandomName(4, 10);
+	const firstName2 = Util.RandomName(4, 10);
+	var lastName2 = Util.RandomName(4, 10);
+	//Ensure last names could not be found with same search term
+	while(lastName.indexOf(lastName2) != -1) {
+		lastName2 = Util.RandomName(4,10)
+	}
+
 	const fullName = firstName + ' ' + lastName;
-	var n = ((lastName.lentgh) - 2);
+	const fullName2 = firstName2 + ' ' + lastName2;
+	const noResults = Util.RandomString(12);
+	var n = ((lastName.length) - 2);
 	const partial = lastName.substring(0,n);
 
 	await t
@@ -126,19 +136,35 @@ test('Search by last name exists on PP1, PP1B, PP5', async t => {
 			last:lastName
 		},
 	});
+	// Create Profile to not be searched for
+	t.ctx.profile_nid = await Actions.CreateNode({
+		type:"profile",
+		name:{
+			first:firstName2,
+			last:lastName2
+		},
+	});
 
 	await t
 
 	// Check PP1
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
 	.setNativeDialogHandler(() => true)
-	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
-	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
-
+	.typeText(PeoplePage.common.searchByLastNameBox, lastName)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, partial)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, noResults)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 	// Check PP6
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -151,12 +177,24 @@ test('Search by last name exists on PP1, PP1B, PP5', async t => {
 	.click(PeoplePage.auth.largeImageCheck)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
-	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
+	.navigateTo(Env.baseURL)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, lastName)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, partial)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, noResults)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 	// Check PP5
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -168,12 +206,24 @@ test('Search by last name exists on PP1, PP1B, PP5', async t => {
 	.click(PeoplePage.auth.pp5Link)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
-	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
+	.navigateTo(Env.baseURL)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, lastName)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, partial)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, noResults)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 	// Check PP1B
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -185,12 +235,24 @@ test('Search by last name exists on PP1, PP1B, PP5', async t => {
 	.click(PeoplePage.auth.pp1BLink)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
-	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
+	.navigateTo(Env.baseURL)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, lastName)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, partial)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, noResults)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 	// Check PP1 No Pictures
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -202,12 +264,24 @@ test('Search by last name exists on PP1, PP1B, PP5', async t => {
 	.click(PeoplePage.auth.pp1NoPicturesLink)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
-	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
+	.navigateTo(Env.baseURL)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, lastName)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, partial)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBox, noResults)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 	// Check PP5 No Pictures
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -219,12 +293,24 @@ test('Search by last name exists on PP1, PP1B, PP5', async t => {
 	.click(PeoplePage.auth.pp5NoPicturesLink)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
-	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
-	.click(PeoplePage.auth.ppSearchButton)
-	.click(Selector('a').withText(fullName))
+	.navigateTo(Env.baseURL)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, lastName)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, partial)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, noResults)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 	// Put PP1 Back
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -236,4 +322,7 @@ test('Search by last name exists on PP1, PP1B, PP5', async t => {
 	.click(PeoplePage.auth.pp1Link)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+
+
+
 });

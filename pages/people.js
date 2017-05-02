@@ -26,13 +26,17 @@ module.exports = {
 		pp5DeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP5 - People profile listing filtered by keyword').prevSibling(0).find('.delete').find('a'),
 		pp5NoPicturesDeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP5 - People profile listing filtered by keyword: No pictures').prevSibling(0).find('.delete').find('a'),
 		pp1DeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP1 - Listing page for multiple people profiles').prevSibling(0).find('.delete').find('a'),
-		searchByLastNameBox:Selector('#edit-field-profile-lastname-value'),
-		ppSearchButton:Selector('button').withText('Apply')
+
 	},
 	common:{
 		pageHeader:Selector('h1.page-header'),
 		viewFilters:Selector('.views-exposed-form'),
 		roleFilter:Selector('#edit-field-profile-role-tid'),
-		relatedKeywords:Selector('.view-pp4 .view-content')
+		relatedKeywords:Selector('.view-pp4 .view-content'),
+		searchByLastNameBox:Selector('#edit-field-profile-lastname-value'),
+		searchByLastNameBoxPP5:Selector('#edit-field-profile-lastname-value-1'),
+		ppSearchButton:Selector('button').withText('Apply'),
+		listingArea:Selector('div.view-content'),
+		noResults:Selector('div.view-empty')
 	}
 };
