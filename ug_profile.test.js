@@ -9,7 +9,7 @@ import { Selector } from 'testcafe';
 
 fixture `UG Profile`
 	.beforeEach(async t => {
-		await Login(await t, Env.creds.admin.username, Env.creds.admin.password);
+		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 	})
 	.afterEach(async t => {
 		await t
@@ -107,4 +107,133 @@ test('Role filter is hidden if no profiles with role term exist', async t => {
 	if(PeoplePage.common.viewFilters.innerHTML) {
 		await t.expect(PeoplePage.common.viewFilters.innerHTML).notMatch(/[\s\S]*\"edit-field-profile-role-tid-wrapper\"[\s\S]*/g);
 	}
+});
+
+test('Search by last name exists on PP1, PP1B, PP5', async t => {
+	const firstName = Util.RandomName(4, 10);
+	const lastName = Util.RandomName(4, 10);
+	const fullName = firstName + ' ' + lastName;
+	var n = ((lastName.lentgh) - 2);
+	const partial = lastName.substring(0,n);
+
+	await t
+
+	// Create Profile to be searched for
+	t.ctx.profile_nid = await Actions.CreateNode({
+		type:"profile",
+		name:{
+			first:firstName,
+			last:lastName
+		},
+	});
+
+	await t
+
+	// Check PP1
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+
+
+	// Check PP6
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.click(PeoplePage.auth.panelsCustomizeButton)
+	.click(PeoplePage.auth.pp1DeleteButton)
+	.click(PeoplePage.auth.panelsAddToLeft)
+	.click(PeoplePage.auth.viewPanesLink)
+	.click(PeoplePage.auth.pp6Link)
+	.click(PeoplePage.auth.largeImageCheck)
+	.click(PeoplePage.auth.finishButton)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+
+	// Check PP5
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.click(PeoplePage.auth.panelsCustomizeButton)
+	.click(PeoplePage.auth.pp6DeleteButton)
+	.click(PeoplePage.auth.panelsAddToLeft)
+	.click(PeoplePage.auth.viewPanesLink)
+	.click(PeoplePage.auth.pp5Link)
+	.click(PeoplePage.auth.finishButton)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+
+	// Check PP1B
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.click(PeoplePage.auth.panelsCustomizeButton)
+	.click(PeoplePage.auth.pp5DeleteButton)
+	.click(PeoplePage.auth.panelsAddToLeft)
+	.click(PeoplePage.auth.viewPanesLink)
+	.click(PeoplePage.auth.pp1BLink)
+	.click(PeoplePage.auth.finishButton)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+
+	// Check PP1 No Pictures
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.click(PeoplePage.auth.panelsCustomizeButton)
+	.click(PeoplePage.auth.pp1BDeleteButton)
+	.click(PeoplePage.auth.panelsAddToLeft)
+	.click(PeoplePage.auth.viewPanesLink)
+	.click(PeoplePage.auth.pp1NoPicturesLink)
+	.click(PeoplePage.auth.finishButton)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+
+	// Check PP5 No Pictures
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.click(PeoplePage.auth.panelsCustomizeButton)
+	.click(PeoplePage.auth.pp1NoPicturesDeleteButton)
+	.click(PeoplePage.auth.panelsAddToLeft)
+	.click(PeoplePage.auth.viewPanesLink)
+	.click(PeoplePage.auth.pp5NoPicturesLink)
+	.click(PeoplePage.auth.finishButton)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+	.typeText(PeoplePage.auth.searchByLastNameBox, lastName)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+	.typeText(PeoplePage.auth.searchByLastNameBox, partial)
+	.click(PeoplePage.auth.ppSearchButton)
+	.click(Selector('a').withText(fullName))
+
+	// Put PP1 Back
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.click(PeoplePage.auth.panelsCustomizeButton)
+	.click(PeoplePage.auth.pp5NoPicturesDeleteButton)
+	.click(PeoplePage.auth.panelsAddToLeft)
+	.click(PeoplePage.auth.viewPanesLink)
+	.click(PeoplePage.auth.pp1Link)
+	.click(PeoplePage.auth.finishButton)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
 });
