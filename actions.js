@@ -354,6 +354,7 @@ function profileFormat(data) {
  *
  * Simplified structure:
  * 	{
+ * 		type:"faq",
  * 		tid:"21|_none",
  * 		question:"Lorem ipsum dolor sit amet?",
  * 		answer:{
@@ -364,6 +365,7 @@ function profileFormat(data) {
  * 	}
  */
 function faqFormat(data) {
+	data.answer = data.answer || {};
 	return {
 		type:"faq",
 		tid:data.tid || "_none",
@@ -375,6 +377,114 @@ function faqFormat(data) {
 					format:data.answer.format || "filtered_html"
 				}
 			]
+		},
+		field_tags:{
+			und:data.tags || ""
+		}
+	};
+}
+
+/**
+ * COURSE OUTLINE Converts simplified JSON into the proper format to post to Drupal Services
+ * @param  {object} data Simplified JSON object containing node data
+ * @return {object}      JSON data in proper format to be posted
+ *
+ * Simplified structure:
+ * 	{
+ * 		type:"course_outline",
+ * 		name:"Test Course Name",
+ * 		code:"COMP*101",
+ * 		section:"01",
+ * 		term:"1|2|3|_none",
+ * 		category:"21|_none",
+ * 		instructor:{
+ * 			name:"John Doe",
+ * 			url:"http://www.john-doe.me"
+ * 		},
+ * 		details:{
+ * 			value:"Some course details here.",
+ * 			format:"full_html|filtered_html|plain_text"
+ * 		},
+ * 		website:"http://www.coursesite.com",
+ * 		course_level:"4|5|6|7|8|9|10|11|_none",
+ * 		academic_level:"12|13|_none",
+ * 		subject:"21|_none",
+ * 		department:"21|_none",
+ * 		tags:"test, tags, here"
+ * 	}
+ */
+function courseOutlineFormat(data) {
+	data.instructor = data.instructor || {};
+	data.details = data.details || {};
+	return {
+		type:data.type,
+		field_course_name:{
+			und:[
+				{
+					value:data.name
+				}
+			]
+		},
+		field_course_code:{
+			und:[
+				{
+					value:data.code
+				}
+			]
+		},
+		field_course_section:{
+			und:[
+				{
+					value:data.section || ""
+				}
+			]
+		},
+		field_course_term:{
+			und:data.term || "_none"
+		},
+		field_course_category:{
+			und:data.category || "_none"
+		},
+		field_course_instructor:{
+			und:[
+				{
+					value:data.instructor.name || ""
+				}
+			]
+		},
+		field_course_instructor_url:{
+			und:[
+				{
+					url:data.instructor.url || ""
+				}
+			]
+		},
+		field_course_body:{
+			und:[
+				{
+					value:data.details.value || "",
+					format:data.details.format || "filtered_html"
+				}
+			]
+		},
+		field_course_website:{
+			und:[
+				{
+					url:data.website || ""
+				}
+			]
+		},
+		field_course_level:{
+			und:data.course_level || "_none"
+		},
+		field_course_acad_level:{
+			und:data.academic_level || "_none"
+		},
+		field_course_subject:{
+			und:data.subject || "_none"
+		},
+		field_course_department:{
+			und:data.department || "_none"
 		},
 		field_tags:{
 			und:data.tags || ""
@@ -432,7 +542,7 @@ module.exports = {
 		}).then(function(body) {
 			res = true;
 		}).catch(function(err) {
-			if(err) console.log(err.message);
+			if(err) console.log(err.message);	
 		});
 
 		return res;
@@ -454,6 +564,9 @@ module.exports = {
 				break;
 			case "faq":
 				data = faqFormat(node_data);
+				break;
+			case "course_outline":
+				data = courseOutlineFormat(node_data);
 				break;
 			default:
 				return "Invalid node type."
