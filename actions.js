@@ -47,7 +47,6 @@ async function getLoginHeaders(user, pass) {
  *
  * Simplified structure:
  * 	{
- * 		type:"page",
  * 		title:"Page Title",
  * 		tid:"21", // Make sure this exists or you will get an error!
  * 		body:{
@@ -64,7 +63,7 @@ function pageFormat(data) {
 
 	return {
 		type:"page",
-		title:data.title,
+		title:data.title || Util.RandomName(4, 10),
 		field_page_body:{
 			und:[
 				{
@@ -102,7 +101,6 @@ function pageFormat(data) {
  *
  * Simplified structure:
  * 	{
- * 		type:"news", // Required
  * 		title:"News Title", // Required
  * 		tid:"21", // Make sure this exists or you will get an error!
  * 		author:"John Doe",
@@ -120,7 +118,7 @@ function newsFormat(data) {
 	data.body = data.body || {};
 	return {
 		type:"news",
-		title:data.title,
+		title:data.title || Util.RandomName(4, 10),
 		field_news_tags:{
 			und:data.tid || "_none"
 		},
@@ -164,7 +162,6 @@ function newsFormat(data) {
  *
  * Simplified structure:
  * 	{
- * 		type:"event",
  * 		title:"Event Title",
  * 		tid:"21", // Make sure this exists or you will get an error!
  * 		all_day:[true|false],
@@ -202,7 +199,7 @@ function eventFormat(data) {
 
 	var ret = {
 		type:"event",
-		title:data.title,
+		title:data.title || Util.RandomName(4, 10),
 		field_event_category:{
 			und:data.tid || "_none"
 		},
@@ -262,7 +259,6 @@ function eventFormat(data) {
  *
  * Simplified structure:
  * 	{
- * 		type:"profile",
  * 		name:{
  * 			first:"John",
  * 			last:"Doe"
@@ -297,19 +293,20 @@ function profileFormat(data) {
 	data.role = data.role || {};
 	data.summary = data.summary || {};
 	data.info_fields = data.info_fields || {};
+	data.name = data.name || {};
 	var post = {
 		type:"profile",
 		field_profile_name:{
 			und:[
 				{
-					value:data.name.first
+					value:data.name.first || Util.RandomName(4, 10)
 				}
 			]
 		},
 		field_profile_lastname:{
 			und:[
 				{
-					value:data.name.last
+					value:data.name.last || Util.RandomName(4, 10)
 				}
 			]
 		},
@@ -364,14 +361,15 @@ function profileFormat(data) {
  * 	}
  */
 function faqFormat(data) {
+	data.answer = data.answer || {};
 	return {
 		type:"faq",
 		tid:data.tid || "_none",
-		title:data.question,
+		title:data.question || Util.RandomName(4, 10),
 		field_faq_answer:{
 			und:[
 				{
-					value:data.answer.value,
+					value:data.answer.value || Util.RandomName(4, 10),
 					format:data.answer.format || "filtered_html"
 				}
 			]
@@ -437,9 +435,9 @@ module.exports = {
 
 		return res;
 	},
-	CreateNode:async function(node_data) {
+	CreateNode:async function(type, node_data) {
 		var data;
-		switch(node_data.type) {
+		switch(type) {
 			case "page":
 				data = pageFormat(node_data);
 				break;

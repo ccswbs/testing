@@ -29,33 +29,19 @@ test
 		tags = tags.toString();
 
 		// Create News
-		t.ctx.news_nid = await Actions.CreateNode({
-			type:"news",
-			title:"Test news",
+		t.ctx.news_nid = await Actions.CreateNode("news", {
 			tags:tags
 		});
 		// Create Event
-		t.ctx.event_nid = await Actions.CreateNode({
-			type:"event",
-			title:Util.RandomName(4, 10),
+		t.ctx.event_nid = await Actions.CreateNode("event", {
 			tags:tags
 		});
 		// Create Profile
-		t.ctx.profile_nid = await Actions.CreateNode({
-			type:"profile",
-			name:{
-				first:Util.RandomName(4, 10),
-				last:Util.RandomName(4, 10)
-			},
+		t.ctx.profile_nid = await Actions.CreateNode("profile", {
 			tags:tags
 		});
 		// Create FAQ
-		t.ctx.faq_nid = await Actions.CreateNode({
-			type:"faq",
-			question:"Test Question",
-			answer:{
-				value:"Test Answer"
-			},
+		t.ctx.faq_nid = await Actions.CreateNode("faq", {
 			tags:tags
 		});
 	})('Related keywords on E6, F4, PP4, and N7 are consistent', async t => {
