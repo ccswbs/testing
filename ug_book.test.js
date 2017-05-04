@@ -39,5 +39,6 @@ test
 			.expect(BookPage.common.upLink.exists).ok();
 	})
 	.after(async t => {
-
+		await Actions.DeleteNode(t.ctx.root);
+		await Actions.DeleteNode(t.ctx.child);
 	});
