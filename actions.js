@@ -410,7 +410,7 @@ module.exports = {
 				description:desc
 			}
 		}).then(function(body) {
-			tid = body[0];
+			tid = body.tid;
 		}).catch(function(err) {
 			if(err) console.log(err.message);
 		});

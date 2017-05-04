@@ -35,7 +35,7 @@ test
 			.expect(EventPage.common.pageHeader.innerText).eql('Upcoming Events')
 			.navigateTo(Env.baseURL + EventPage.URL + '/' + t.ctx.tid)
 			.expect(EventPage.common.pageHeader.innerText).eql('Events related to ' + t.ctx.catname)
-			.expect(await Selector('h2.media-heading').exists).ok()
+			.expect(await Selector('h2').find('a').withText(t.ctx.eventtitle)).ok()
 			.expect(await Selector('h3.media-heading').exists).notOk();
 	})
 	.after(async t => {
