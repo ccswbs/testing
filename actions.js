@@ -2,7 +2,7 @@ const request = require('request-promise-native');
 
 const Env = require('./environment.js');
 const Util = require('./utils.js');
-//const UserPage = require('./pages/user.js');
+const UserPage = require('./pages/user.js');
 
 const PostPath = "/testcafe";
 const LoginEndpoint = "/user/login";
@@ -380,6 +380,41 @@ function faqFormat(data) {
 	};
 }
 
+/**
+ * BOOK Converts simplified JSON into the proper format to post to Drupal Services
+ * @param  {object} data Simplified JSON object containing node data
+ * @return {object}      JSON data in proper format to be posted
+ *
+ * Simplified structure:
+ * 	{
+ * 		type:"book",
+ * 		title:"Book Page Title",
+ * 		body:{
+ * 			value:"Body text here.",
+ * 			format:"full_html|filtered_html|plain_text"
+ * 		},
+ * 		tags:"test, tags, here"
+ * 	}
+ */
+function bookFormat(data) {
+	data.body = data.body || {};
+	return {
+		type:"book",
+		title:data.title,
+		body:{
+			und:[
+				{
+					value:data.body.value || "",
+					format:data.body.format || "filtered_html"
+				}
+			]
+		},
+		field_tags:{
+			und:data.tags || ""
+		}
+	};
+}
+
 module.exports = {
 	Login:async function(t, user, pass) {
 		await t
@@ -452,6 +487,9 @@ module.exports = {
 				break;
 			case "faq":
 				data = faqFormat(node_data);
+				break;
+			case "book":
+				data = bookFormat(node_data);
 				break;
 			default:
 				return "Invalid node type."
