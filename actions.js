@@ -2,7 +2,7 @@ const request = require('request-promise-native');
 
 const Env = require('./environment.js');
 const Util = require('./utils.js');
-//const UserPage = require('./pages/user.js');
+const UserPage = require('./pages/user.js');
 
 const PostPath = "/testcafe";
 const LoginEndpoint = "/user/login";
@@ -47,7 +47,6 @@ async function getLoginHeaders(user, pass) {
  *
  * Simplified structure:
  * 	{
- * 		type:"page",
  * 		title:"Page Title",
  * 		tid:"21", // Make sure this exists or you will get an error!
  * 		body:{
@@ -64,7 +63,7 @@ function pageFormat(data) {
 
 	return {
 		type:"page",
-		title:data.title,
+		title:data.title || Util.RandomName(4, 10),
 		field_page_body:{
 			und:[
 				{
@@ -102,7 +101,6 @@ function pageFormat(data) {
  *
  * Simplified structure:
  * 	{
- * 		type:"news", // Required
  * 		title:"News Title", // Required
  * 		tid:"21", // Make sure this exists or you will get an error!
  * 		author:"John Doe",
@@ -120,7 +118,7 @@ function newsFormat(data) {
 	data.body = data.body || {};
 	return {
 		type:"news",
-		title:data.title,
+		title:data.title || Util.RandomName(4, 10),
 		field_news_tags:{
 			und:data.tid || "_none"
 		},
@@ -164,7 +162,6 @@ function newsFormat(data) {
  *
  * Simplified structure:
  * 	{
- * 		type:"event",
  * 		title:"Event Title",
  * 		tid:"21", // Make sure this exists or you will get an error!
  * 		all_day:[true|false],
@@ -202,7 +199,7 @@ function eventFormat(data) {
 
 	var ret = {
 		type:"event",
-		title:data.title,
+		title:data.title || Util.RandomName(4, 10),
 		field_event_category:{
 			und:data.tid || "_none"
 		},
@@ -262,7 +259,6 @@ function eventFormat(data) {
  *
  * Simplified structure:
  * 	{
- * 		type:"profile",
  * 		name:{
  * 			first:"John",
  * 			last:"Doe"
@@ -297,19 +293,20 @@ function profileFormat(data) {
 	data.role = data.role || {};
 	data.summary = data.summary || {};
 	data.info_fields = data.info_fields || {};
+	data.name = data.name || {};
 	var post = {
 		type:"profile",
 		field_profile_name:{
 			und:[
 				{
-					value:data.name.first
+					value:data.name.first || Util.RandomName(4, 10)
 				}
 			]
 		},
 		field_profile_lastname:{
 			und:[
 				{
-					value:data.name.last
+					value:data.name.last || Util.RandomName(4, 10)
 				}
 			]
 		},
@@ -369,11 +366,11 @@ function faqFormat(data) {
 	return {
 		type:"faq",
 		tid:data.tid || "_none",
-		title:data.question,
+		title:data.question || Util.RandomName(4, 10),
 		field_faq_answer:{
 			und:[
 				{
-					value:data.answer.value,
+					value:data.answer.value || Util.RandomName(4, 10),
 					format:data.answer.format || "filtered_html"
 				}
 			]
@@ -486,6 +483,41 @@ function courseOutlineFormat(data) {
 		field_course_department:{
 			und:data.department || "_none"
 		},
+    field_tags:{
+			und:data.tags || ""
+		}
+	};
+}
+
+ /**
+ * BOOK Converts simplified JSON into the proper format to post to Drupal Services
+ * @param  {object} data Simplified JSON object containing node data
+ * @return {object}      JSON data in proper format to be posted
+ *
+ * Simplified structure:
+ * 	{
+ * 		type:"book",
+ * 		title:"Book Page Title",
+ * 		body:{
+ * 			value:"Body text here.",
+ * 			format:"full_html|filtered_html|plain_text"
+ * 		},
+ * 		tags:"test, tags, here"
+ * 	}
+ */
+function bookFormat(data) {
+	data.body = data.body || {};
+	return {
+		type:"book",
+		title:data.title,
+		body:{
+			und:[
+				{
+					value:data.body.value || "",
+					format:data.body.format || "filtered_html"
+				}
+			]
+		},
 		field_tags:{
 			und:data.tags || ""
 		}
@@ -520,7 +552,7 @@ module.exports = {
 				description:desc
 			}
 		}).then(function(body) {
-			tid = body[0];
+			tid = body.tid;
 		}).catch(function(err) {
 			if(err) console.log(err.message);
 		});
@@ -547,9 +579,9 @@ module.exports = {
 
 		return res;
 	},
-	CreateNode:async function(node_data) {
+	CreateNode:async function(type, node_data) {
 		var data;
-		switch(node_data.type) {
+		switch(type) {
 			case "page":
 				data = pageFormat(node_data);
 				break;
@@ -567,6 +599,9 @@ module.exports = {
 				break;
 			case "course_outline":
 				data = courseOutlineFormat(node_data);
+        break;
+			case "book":
+				data = bookFormat(node_data);
 				break;
 			default:
 				return "Invalid node type."
