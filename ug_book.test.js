@@ -14,12 +14,10 @@ test
 	.before(async t => {
 		await Actions.Login(t, Env.creds.admin.username, Env.creds.admin.password);
 
-		t.ctx.root = await Actions.CreateNode({
-			type:"book",
+		t.ctx.root = await Actions.CreateNode("book", {
 			title:"Root Page"
 		});
-		t.ctx.child = await Actions.CreateNode({
-			type:"book",
+		t.ctx.child = await Actions.CreateNode("book", {
 			title:"Child Page"
 		});
 
