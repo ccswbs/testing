@@ -23,8 +23,7 @@ test
 		// Create Event Category
 		t.ctx.tid = await Actions.CreateTerm(Util.Vocabulary['event_category'], t.ctx.catname, "");
 		// Create Event Node
-		t.ctx.event = await Actions.CreateNode({
-			type:"event",
+		t.ctx.event = await Actions.CreateNode("event", {
 			title:t.ctx.eventtitle,
 			tid:t.ctx.tid
 		});
