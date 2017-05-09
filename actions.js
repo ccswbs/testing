@@ -52,11 +52,11 @@ async function getLoginHeaders(user, pass) {
  * 		body:{
  * 			value:"Main page text.",
  *    		summary:this.value,
- *       	format:"full_html|filtered_html|plain_text"	
+ *       	format:"full_html|filtered_html|plain_text"
  * 		}
  * 		tags:"test, tags, here"
  *  }
- * 
+ *
  */
 function pageFormat(data) {
 	data.body = data.body || {};
@@ -112,7 +112,7 @@ function pageFormat(data) {
  * 		tags:"test, tags, here",
  * 		url:"http://www.example.com"
  * 	}
- * 
+ *
  */
 function newsFormat(data) {
 	data.body = data.body || {};
