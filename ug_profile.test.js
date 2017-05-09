@@ -74,43 +74,9 @@ fixture `UG Profile`
 	});
 
 test
-.before(async t => {
-	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-	//Create Names for dummy profiles
-	t.ctx.firstName = Util.RandomName(4, 10);
-	t.ctx.lastName = Util.RandomName(4, 10);
-	t.ctx.firstName2 = Util.RandomName(4, 10);
-	t.ctx.lastName2 = Util.RandomName(4, 10);
-	//Ensure last names could not be found with same search term
-	while(t.ctx.lastName.indexOf(t.ctx.lastName2) != -1) {
-		t.ctx.lastName2 = Util.RandomName(4,10)
-	}
+.before(beforeSearch)('Search by last name exists on PP1', async t => {
+	t.ctx.testID = 1;
 
-	t.ctx.fullName = t.ctx.firstName + ' ' + t.ctx.lastName;
-	t.ctx.fullName2 = t.ctx.firstName2 + ' ' + t.ctx.lastName2;
-	t.ctx.noResults = Util.RandomString(12);
-	var n = ((t.ctx.lastName.length) - 2);
-	t.ctx.partial = t.ctx.lastName.substring(0,n);
-
-	await t
-
-	// Create Profile to be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName,
-			last:t.ctx.lastName
-		},
-	});
-	// Create Profile to not be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName2,
-			last:t.ctx.lastName2
-		},
-	});
-})('Search by last name exists on PP1', async t => {
 	await t
 	// Check PP1
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -120,66 +86,25 @@ test
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.partial)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.noResults)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 })
 .after(async t => {
 	await t
-		.navigateTo(Env.baseURL + AdminContentPage.URL)
-		.click(AdminContentPage.auth.selectAllCheck)
-		.click(AdminContentPage.auth.operationSelect)
-		.click(AdminContentPage.auth.operationDeleteOption)
-		.click(AdminContentPage.auth.updateButton)
-		.click(AdminContentPage.auth.confirmDelete)
-		.expect("Test").eql("Test");
+	await Actions.DeleteNode(t.ctx.profile_nid)
+	await Actions.DeleteNode(t.ctx.profile_nid2)
 });
 
 test
-.before(async t => {
-	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-	//Create Names for dummy profiles
-	t.ctx.firstName = Util.RandomName(4, 10);
-	t.ctx.lastName = Util.RandomName(4, 10);
-	t.ctx.firstName2 = Util.RandomName(4, 10);
-	t.ctx.lastName2 = Util.RandomName(4, 10);
-	//Ensure last names could not be found with same search term
-	while(t.ctx.lastName.indexOf(t.ctx.lastName2) != -1) {
-		t.ctx.lastName2 = Util.RandomName(4,10)
-	}
+.before(beforeSearch)('Search by last name exists on PP6', async t => {
+	t.ctx.testID = 2;
 
-	t.ctx.fullName = t.ctx.firstName + ' ' + t.ctx.lastName;
-	t.ctx.fullName2 = t.ctx.firstName2 + ' ' + t.ctx.lastName2;
-	t.ctx.noResults = Util.RandomString(12);
-	var n = ((t.ctx.lastName.length) - 2);
-	t.ctx.partial = t.ctx.lastName.substring(0,n);
-
-	await t
-
-	// Create Profile to be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName,
-			last:t.ctx.lastName
-		},
-	});
-	// Create Profile to not be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName2,
-			last:t.ctx.lastName2
-		},
-	});
-})('Search by last name exists on PP6', async t => {
 	await t
 	// Check PP6
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -194,84 +119,27 @@ test
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
 	.navigateTo(Env.baseURL)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.lastName)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.partial)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.noResults)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 })
-.after(async t => {
-	await t
-	// Put PP1 Back
-	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
-	.click(PeoplePage.auth.panelsCustomizeButton)
-	.click(PeoplePage.auth.pp6DeleteButton)
-	.click(PeoplePage.auth.panelsAddToLeft)
-	.click(PeoplePage.auth.viewPanesLink)
-	.click(PeoplePage.auth.pp1Link)
-	.click(PeoplePage.auth.finishButton)
-	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	await t
-	.navigateTo(Env.baseURL + AdminContentPage.URL)
-	.click(AdminContentPage.auth.selectAllCheck)
-	.click(AdminContentPage.auth.operationSelect)
-	.click(AdminContentPage.auth.operationDeleteOption)
-	.click(AdminContentPage.auth.updateButton)
-	.click(AdminContentPage.auth.confirmDelete)
-	.expect("Test").eql("Test");
-});
+.after(afterSearch);
 
 test
-.before(async t => {
-	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-	//Create Names for dummy profiles
-	t.ctx.firstName = Util.RandomName(4, 10);
-	t.ctx.lastName = Util.RandomName(4, 10);
-	t.ctx.firstName2 = Util.RandomName(4, 10);
-	t.ctx.lastName2 = Util.RandomName(4, 10);
-	//Ensure last names could not be found with same search term
-	while(t.ctx.lastName.indexOf(t.ctx.lastName2) != -1) {
-		t.ctx.lastName2 = Util.RandomName(4,10)
-	}
+.before(beforeSearch)('Search by last name exists on PP5', async t => {
+	t.ctx.testID = 3;
 
-	t.ctx.fullName = t.ctx.firstName + ' ' + t.ctx.lastName;
-	t.ctx.fullName2 = t.ctx.firstName2 + ' ' + t.ctx.lastName2;
-	t.ctx.noResults = Util.RandomString(12);
-	var n = ((t.ctx.lastName.length) - 2);
-	t.ctx.partial = t.ctx.lastName.substring(0,n);
-
-	await t
-
-	// Create Profile to be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName,
-			last:t.ctx.lastName
-		},
-	});
-	// Create Profile to not be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName2,
-			last:t.ctx.lastName2
-		},
-	});
-})('Search by last name exists on PP5', async t => {
 	await t
 	// Check PP5
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -285,84 +153,27 @@ test
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
 	.navigateTo(Env.baseURL)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.lastName)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.partial)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.noResults)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 })
-.after(async t => {
-	await t
-	// Put PP1 Back
-	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
-	.click(PeoplePage.auth.panelsCustomizeButton)
-	.click(PeoplePage.auth.pp5DeleteButton)
-	.click(PeoplePage.auth.panelsAddToLeft)
-	.click(PeoplePage.auth.viewPanesLink)
-	.click(PeoplePage.auth.pp1Link)
-	.click(PeoplePage.auth.finishButton)
-	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	await t
-	.navigateTo(Env.baseURL + AdminContentPage.URL)
-	.click(AdminContentPage.auth.selectAllCheck)
-	.click(AdminContentPage.auth.operationSelect)
-	.click(AdminContentPage.auth.operationDeleteOption)
-	.click(AdminContentPage.auth.updateButton)
-	.click(AdminContentPage.auth.confirmDelete)
-	.expect("Test").eql("Test");
-});
+.after(afterSearch);
 
 test
-.before(async t => {
-	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-	//Create Names for dummy profiles
-	t.ctx.firstName = Util.RandomName(4, 10);
-	t.ctx.lastName = Util.RandomName(4, 10);
-	t.ctx.firstName2 = Util.RandomName(4, 10);
-	t.ctx.lastName2 = Util.RandomName(4, 10);
-	//Ensure last names could not be found with same search term
-	while(t.ctx.lastName.indexOf(t.ctx.lastName2) != -1) {
-		t.ctx.lastName2 = Util.RandomName(4,10)
-	}
+.before(beforeSearch)('Search by last name exists on PP1B', async t => {
+	t.ctx.testID = 4;
 
-	t.ctx.fullName = t.ctx.firstName + ' ' + t.ctx.lastName;
-	t.ctx.fullName2 = t.ctx.firstName2 + ' ' + t.ctx.lastName2;
-	t.ctx.noResults = Util.RandomString(12);
-	var n = ((t.ctx.lastName.length) - 2);
-	t.ctx.partial = t.ctx.lastName.substring(0,n);
-
-	await t
-
-	// Create Profile to be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName,
-			last:t.ctx.lastName
-		},
-	});
-	// Create Profile to not be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName2,
-			last:t.ctx.lastName2
-		},
-	});
-})('Search by last name exists on PP1B', async t => {
 	await t
 	// Check PP1B
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -376,84 +187,27 @@ test
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
 	.navigateTo(Env.baseURL)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.lastName)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.partial)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.noResults)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 })
-.after(async t => {
-	await t
-	// Put PP1 Back
-	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
-	.click(PeoplePage.auth.panelsCustomizeButton)
-	.click(PeoplePage.auth.pp1BDeleteButton)
-	.click(PeoplePage.auth.panelsAddToLeft)
-	.click(PeoplePage.auth.viewPanesLink)
-	.click(PeoplePage.auth.pp1Link)
-	.click(PeoplePage.auth.finishButton)
-	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	await t
-	.navigateTo(Env.baseURL + AdminContentPage.URL)
-	.click(AdminContentPage.auth.selectAllCheck)
-	.click(AdminContentPage.auth.operationSelect)
-	.click(AdminContentPage.auth.operationDeleteOption)
-	.click(AdminContentPage.auth.updateButton)
-	.click(AdminContentPage.auth.confirmDelete)
-	.expect("Test").eql("Test");
-});
+.after(afterSearch);
 
 test
-.before(async t => {
-	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-	//Create Names for dummy profiles
-	t.ctx.firstName = Util.RandomName(4, 10);
-	t.ctx.lastName = Util.RandomName(4, 10);
-	t.ctx.firstName2 = Util.RandomName(4, 10);
-	t.ctx.lastName2 = Util.RandomName(4, 10);
-	//Ensure last names could not be found with same search term
-	while(t.ctx.lastName.indexOf(t.ctx.lastName2) != -1) {
-		t.ctx.lastName2 = Util.RandomName(4,10)
-	}
+.before(beforeSearch)('Search by last name exists on PP1 No pictures', async t => {
+	t.ctx.testID = 5;
 
-	t.ctx.fullName = t.ctx.firstName + ' ' + t.ctx.lastName;
-	t.ctx.fullName2 = t.ctx.firstName2 + ' ' + t.ctx.lastName2;
-	t.ctx.noResults = Util.RandomString(12);
-	var n = ((t.ctx.lastName.length) - 2);
-	t.ctx.partial = t.ctx.lastName.substring(0,n);
-
-	await t
-
-	// Create Profile to be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName,
-			last:t.ctx.lastName
-		},
-	});
-	// Create Profile to not be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
-		name:{
-			first:t.ctx.firstName2,
-			last:t.ctx.lastName2
-		},
-	});
-})('Search by last name exists on PP1 No pictures', async t => {
 	await t
 	// Check PP1 No Pictures
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
@@ -467,49 +221,59 @@ test
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
 	.navigateTo(Env.baseURL)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.lastName)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.partial)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
 	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
 	.typeText(PeoplePage.common.searchByLastNameBox, t.ctx.noResults)
 	.click(PeoplePage.common.ppSearchButton)
 	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
 })
-.after(async t => {
+.after(afterSearch);
+
+
+test
+.before(beforeSearch)('Search by last name exists on PP5 No Pictures', async t => {
+	t.ctx.testID = 6;
+
 	await t
-	// Put PP1 Back
+	// Check PP5 No Pictures
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
 	.setNativeDialogHandler(() => true)
 	.click(PeoplePage.auth.panelsCustomizeButton)
 	.click(PeoplePage.auth.pp1DeleteButton)
 	.click(PeoplePage.auth.panelsAddToLeft)
 	.click(PeoplePage.auth.viewPanesLink)
-	.click(PeoplePage.auth.pp1Link)
+	.click(PeoplePage.auth.pp5NoPicturesLink)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	await t
-	.navigateTo(Env.baseURL + AdminContentPage.URL)
-	.click(AdminContentPage.auth.selectAllCheck)
-	.click(AdminContentPage.auth.operationSelect)
-	.click(AdminContentPage.auth.operationDeleteOption)
-	.click(AdminContentPage.auth.updateButton)
-	.click(AdminContentPage.auth.confirmDelete)
-	.expect("Test").eql("Test");
-});
+	.navigateTo(Env.baseURL)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.lastName)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.partial)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
+	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.noResults)
+	.click(PeoplePage.common.ppSearchButton)
+	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
 
+})
+.after(afterSearch);
 
-test
-.before(async t => {
+async function beforeSearch(t) {
 	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 	//Create Names for dummy profiles
 	t.ctx.firstName = Util.RandomName(4, 10);
@@ -524,10 +288,8 @@ test
 	t.ctx.fullName = t.ctx.firstName + ' ' + t.ctx.lastName;
 	t.ctx.fullName2 = t.ctx.firstName2 + ' ' + t.ctx.lastName2;
 	t.ctx.noResults = Util.RandomString(12);
-	var n = ((t.ctx.lastName.length) - 2);
+	var n = Util.RandomInt(1,t.ctx.lastName.length);
 	t.ctx.partial = t.ctx.lastName.substring(0,n);
-
-	await t
 
 	// Create Profile to be searched for
 	t.ctx.profile_nid = await Actions.CreateNode({
@@ -538,63 +300,52 @@ test
 		},
 	});
 	// Create Profile to not be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
+	t.ctx.profile_nid2 = await Actions.CreateNode({
 		type:"profile",
 		name:{
 			first:t.ctx.firstName2,
 			last:t.ctx.lastName2
 		},
 	});
-})('Search by last name exists on PP5 No Pictures', async t => {
-	await t
-	// Check PP5 No Pictures
-	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
-	.click(PeoplePage.auth.panelsCustomizeButton)
-	.click(PeoplePage.auth.pp1DeleteButton)
-	.click(PeoplePage.auth.panelsAddToLeft)
-	.click(PeoplePage.auth.viewPanesLink)
-	.click(PeoplePage.auth.pp5NoPicturesLink)
-	.click(PeoplePage.auth.finishButton)
-	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	.navigateTo(Env.baseURL)
-	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
-	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.lastName)
-	.click(PeoplePage.common.ppSearchButton)
-	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
-	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
-	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
-	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.partial)
-	.click(PeoplePage.common.ppSearchButton)
-	.expect(PeoplePage.common.listingArea.textContent).contains(t.ctx.fullName)
-	.expect(PeoplePage.common.listingArea.textContent).notContains(t.ctx.fullName2)
-	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
-	.setNativeDialogHandler(() => true)
-	.typeText(PeoplePage.common.searchByLastNameBoxPP5, t.ctx.noResults)
-	.click(PeoplePage.common.ppSearchButton)
-	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
+}
 
-})
-.after(async t => {
+async function afterSearch(t){
 	await t
 	// Put PP1 Back
 	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
 	.setNativeDialogHandler(() => true)
 	.click(PeoplePage.auth.panelsCustomizeButton)
-	.click(PeoplePage.auth.pp5NoPicturesDeleteButton)
+	switch (t.ctx.testID){
+		case 1:
+			break;
+		case 2:
+			await t
+			.click(PeoplePage.auth.pp6DeleteButton)
+			break;
+		case 3:
+			await t
+			.click(PeoplePage.auth.pp5DeleteButton)
+			break;
+		case 4:
+			await t
+			.click(PeoplePage.auth.pp1BDeleteButton)
+			break;
+		case 5:
+			await t
+			.click(PeoplePage.auth.pp1NoPicturesDeleteButton)
+			break;
+		case 6:
+			await t
+			.click(PeoplePage.auth.pp5NoPicturesDeleteButton)
+			break;
+	}
+	await t
 	.click(PeoplePage.auth.panelsAddToLeft)
 	.click(PeoplePage.auth.viewPanesLink)
 	.click(PeoplePage.auth.pp1Link)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
 	await t
-	.navigateTo(Env.baseURL + AdminContentPage.URL)
-	.click(AdminContentPage.auth.selectAllCheck)
-	.click(AdminContentPage.auth.operationSelect)
-	.click(AdminContentPage.auth.operationDeleteOption)
-	.click(AdminContentPage.auth.updateButton)
-	.click(AdminContentPage.auth.confirmDelete)
-	.expect("Test").eql("Test");
-});
+	await Actions.DeleteNode(t.ctx.profile_nid)
+	await Actions.DeleteNode(t.ctx.profile_nid2)
+}
