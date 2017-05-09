@@ -345,7 +345,6 @@ async function afterSearch(t){
 	.click(PeoplePage.auth.pp1Link)
 	.click(PeoplePage.auth.finishButton)
 	.wait(500).click(PeoplePage.auth.panelsSaveButton)
-	await t
 	await Actions.DeleteNode(t.ctx.profile_nid)
 	await Actions.DeleteNode(t.ctx.profile_nid2)
 }
