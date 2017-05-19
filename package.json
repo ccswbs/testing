@@ -16,6 +16,8 @@
   "license": "ISC",
   "devDependencies": {
     "ava": "^0.19.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-latest": "^6.24.1",
     "jsdoc": "^3.4.3",
     "tap-nyan": "^1.1.0",
     "testcafe": "^0.13.0",
@@ -34,6 +36,8 @@
   "ava": {
     "files": [
       "unit_tests/*.ava.js"
-    ]
+    ],
+    "require": ["babel-register"],
+    "babel": "inherit"
   }
 }
