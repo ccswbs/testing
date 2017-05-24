@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const yesno = require('yesno');
 
 var file = process.argv[2];
 var filename = path.basename(file, '.feature');
@@ -95,8 +96,27 @@ test
 `;
 	});
 
-	fs.writeFile('./' + filename + '.test.js', contents, function(err) {
-		if(err) throw err;
-		console.log('\x1b[32m', 'Testfile for ' + path.basename(file) + ' successfully written.');
+	var dest = './' + filename + '.test.js';
+	fs.exists(dest, function(exists) {
+		if(exists) {
+			console.log('File \'' + dest + '\' already exists and will be overwritten.');
+			yesno.ask('Are you sure you want to continue?', true, function(ok) {
+				if(ok) {
+					fs.writeFile(dest, contents, function(err) {
+						if(err) throw err;
+						console.log('\x1b[32m', 'Testfile for ' + path.basename(file) + ' successfully written.');
+						process.exit();
+					});
+				} else {
+					console.log('Feature conversion aborted.');
+					process.exit();
+				}
+			});
+		} else {
+			fs.writeFile(dest, contents, function(err) {
+				if(err) throw err;
+				console.log('\x1b[32m', 'Testfile for ' + path.basename(file) + ' successfully written.');
+			});
+		}
 	});
 });
