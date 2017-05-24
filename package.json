@@ -10,7 +10,8 @@
     "jsdoc": "jsdoc -c docs/conf.json -d docs .",
     "server-jsdoc": "node docs/server.js",
     "open-jsdoc": "opn http://localhost:8080",
-    "testcafe": "testcafe"
+    "testcafe": "testcafe",
+    "convert": "node convert.js"
   },
   "author": "",
   "license": "ISC",
