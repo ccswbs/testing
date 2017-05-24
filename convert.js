@@ -97,6 +97,6 @@ test
 
 	fs.writeFile('./' + filename + '.test.js', contents, function(err) {
 		if(err) throw err;
-		console.log('Testfile for ' + path.basename(file) + ' successfully written.');
+		console.log('\x1b[32m', 'Testfile for ' + path.basename(file) + ' successfully written.');
 	});
 });
