@@ -1,11 +1,6 @@
-Feature: Breadcrumbs for all hjckrrh content types
-  This test covers the format of all content types
-  that have public facing pages; that is: course outlines,
-  events, FAQ, news, pages, profiles, and services.
-
-  ####################
-  ## Course Outline ##
-  ####################
+Feature: Breadcrumbs for course outline content type
+  This test covers the format of breadcrumbs for
+  hjckrrh course outlines.
 
   Scenario: Course outline listing page includes the proper links in the breadcrumb
     Given path breadcrumbs is enabled and configured
@@ -45,63 +40,3 @@ Feature: Breadcrumbs for all hjckrrh content types
     When  the /course-outlines/[course_outline_alias] page is viewed
     Then  the page title should be "[course_outline]"
       And the breadcrumbs should display only the 'Home' and 'Course Outlines' links
-
-  ############
-  ## Events ##
-  ############
-
-  Scenario: Events listing page includes the proper links in the breadcrumb
-    Given path breadcrumbs is enabled and configured
-    When  the events listing page is viewed
-    Then  the breadcrumbs should display only the 'Home' link
-
-  Scenario: Events listing page filtered by term includes the proper links in the breadcrumb
-    Given path breadcrumbs is enabled and configured
-      And an event category term [tid]
-    When  the events listing page filtered by [tid] is viewed
-    Then  the breadcrumbs should display only the 'Home' link
-
-  Scenario: Event details page includes the proper links in the breadcrumb
-    Given path breadcrumbs is enabled and configured
-      And an event node [event]
-    When  the [event] details page is viewed
-    Then  the breadcrumbs should display only the 'Home' and 'Events' links
-
-  #########
-  ## FAQ ##
-  #########
-
-  Scenario: FAQ listing page includes the proper links in the breadcrumb
-    Given path breadcrumbs is enabled and configured
-    When  the FAQ listing page is viewed
-    Then  the breadcrumbs should display only the 'Home' link
-
-  Scenario: FAQ listing page filtered by term includes the proper links in the breadcrumb
-    Given path breadcrumbs is enabled and configured
-    When  the FAQ listing page filtered by term is viewed
-    Then  the breadcrumbs should display only the 'Home' link
-
-  Scenario: FAQ details page includes the proper links in the breadcrumb
-    Given path breadcrumbs is enabled and configured
-      And an FAQ node [faq]
-    When  the [faq] details page is viewed
-    Then  the breadcrumbs should display only the 'Home' and 'FAQ' links
-
-  ##########
-  ## News ##
-  ##########
-
-
-  ##########
-  ## Page ##
-  ##########
-
-
-  #############
-  ## Profile ##
-  #############
-
-
-  #############
-  ## Service ##
-  #############
