@@ -8,6 +8,8 @@ var filename = path.basename(file, '.feature');
 fs.readFile(file, 'utf8', function(err, data) {
 	if(err) throw err;
 
+	console.log(filename);
+
 	let contents = `const Env = require('./environment.js');
 const Util = require('./utils.js');
 const Actions = require('./actions.js');
@@ -15,7 +17,10 @@ const Actions = require('./actions.js');
 fixture \`` + filename + `\`;
 `;
 
-	let scenarios = data.match(/^\s*Scenario:(?:.|\s)*?\n\n/gm);
+	let scenarios = data.split('\n\n');
+	scenarios = scenarios.filter(function(el) {
+		return el.indexOf('Scenario:') != -1;
+	});
 	scenarios.forEach(function(el, i) {
 		let scenario = {
 			name:'',
