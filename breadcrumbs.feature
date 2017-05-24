@@ -17,13 +17,20 @@ Feature: Breadcrumbs for all hjckrrh content types
       And a course outline category term [term] with term ID [tid]
     When  the course outline listing page filtered by [tid] is viewed
     Then  the page title should be "[term] Course Outlines"
-      And the breadcrumbs should display only the 'Home' link
+      And the breadcrumbs should display only the 'Home' link followed by 'Course Outlines'
 
   Scenario: Course outline listing page under menu follows menu structure in breadcrumb
     Given path breadcrumbs is enabled and configured
       And a course outline listing page as a child page
     When  the course outline listing page is viewed
     Then  the breadcrumbs should display only the 'Home' link followed by parent pages
+
+  Scenario: Course outline listing page under menu filtered by term follows menu structure in breadcrumb
+    Given path breadcrumbs is enabled and configured
+      And a course outline listing page as a child page
+      And a course outline category term [term] with term ID [tid]
+    When  the course outline listing page filtered by [tid] is viewed
+    Then  the breadcrumbs should display only the 'Home' link followed by parent pages, followed by 'Course Outlines'
 
   Scenario: Course outline details page includes the proper links in the breadcrumb
     Given path breadcrumbs is enabled and configured
@@ -34,8 +41,8 @@ Feature: Breadcrumbs for all hjckrrh content types
 
   Scenario: Course outline details page using a path alias includes the proper links in the breadcrumb
     Given path breadcrumbs is enabled and configured
-      And a course outline node [course_outline] with node ID [nid]
-    When  the /course-outline/[course_outline] page is viewed
+      And a course outline node [course_outline] with node ID [nid] and URL alias [course_outline_alias]
+    When  the /course-outlines/[course_outline_alias] page is viewed
     Then  the page title should be "[course_outline]"
       And the breadcrumbs should display only the 'Home' and 'Course Outlines' links
 
