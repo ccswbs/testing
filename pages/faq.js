@@ -6,7 +6,7 @@ module.exports = {
 		errorMessage:Selector('.alert')
 	},
 	auth:{
-		
+
 	},
 	common:{
 		pageHeader:Selector('h1.page-header'),
