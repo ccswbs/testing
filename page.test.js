@@ -159,5 +159,6 @@ test
 			.expect(Page.common.breadcrumb.find('li').find('a').withText(t.ctx.parent).exists).ok();
 	})
 	.after(async t => {
-
+		await Actions.DeleteNode(t.ctx.cnid);
+		await Actions.DeleteNode(t.ctx.pnid);
 	});
