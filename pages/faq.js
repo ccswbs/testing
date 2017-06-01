@@ -10,6 +10,7 @@ module.exports = {
 	},
 	common:{
 		pageHeader:Selector('h1.page-header'),
-		relatedKeywords:Selector('.view-f4 .view-content')
+		relatedKeywords:Selector('.view-f4 .view-content'),
+		breadcrumb:Selector('.breadcrumb')
 	}
 };
