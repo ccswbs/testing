@@ -3,11 +3,13 @@ import { Selector } from 'testcafe';
 module.exports = {
 	URL:'/course-outlines',
 	auth:{
-		
+
 	},
 	common:{
 		instructorLabel:Selector('strong').withText('Instructor:'),
 		instructorValue:Selector('strong').withText('Instructor:').nextSibling(0),
-		termLabel:Selector('strong').withText('Term:')
+		termLabel:Selector('strong').withText('Term:'),
+		breadcrumb:Selector('.breadcrumb'),
+		pageTitle:Selector('h1.page-header')
 	}
 }
