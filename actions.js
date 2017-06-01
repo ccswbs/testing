@@ -414,7 +414,7 @@ function courseOutlineFormat(data) {
 	data.instructor = data.instructor || {};
 	data.details = data.details || {};
 	return {
-		type:data.type,
+		type:"course_outline",
 		field_course_name:{
 			und:[
 				{
