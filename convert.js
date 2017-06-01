@@ -73,6 +73,7 @@ fixture \`` + filename + `\`;
 		});
 
 		contents += `
+// TODO: Write test
 test
 	.before(async t => {`;
 
