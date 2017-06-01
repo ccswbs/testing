@@ -97,7 +97,7 @@ test
 		// a course outline node [course_outline] with node ID [nid] and URL alias [course_outline_alias]
 		t.ctx.course_outline = Util.RandomName(4, 10);
 		t.ctx.course_code = Util.RandomString(4) + '*' + Util.RandomInt(0, 9) + Util.RandomInt(0, 9) + Util.RandomInt(0, 9) + Util.RandomInt(0, 9);
-		t.ctx.course_outline_alias = t.ctx.course_outline.toLowerCase().replace(' ', '-');
+		t.ctx.course_outline_alias = (t.ctx.course_outline + ' ' + t.ctx.course_code).toLowerCase().replace(' ', '-').replace('*', '');
 		t.ctx.nid = await Actions.CreateNode('course_outline', {
 			name:t.ctx.course_outline,
 			code:t.ctx.course_code
@@ -105,7 +105,7 @@ test
 	})('Course outline details page using a path alias includes the proper links in the breadcrumb', async t => {
 		// the /course-outlines/[course_outline_alias] page is viewed
 		await t
-			.navigateTo(Env.baseURL + t.ctx.course_outline_alias);
+			.navigateTo(Env.baseURL + '/course-outlines/' + t.ctx.course_outline_alias)
 		// the page title should be "[course_outline]"
 			.expect(CourseOutlinePage.common.pageTitle.innerText).eql(t.ctx.course_outline + ' (' + t.ctx.course_code + ')')
 		// the breadcrumbs should display only the 'Home' and 'Course Outlines' links
