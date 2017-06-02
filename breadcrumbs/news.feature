@@ -37,6 +37,6 @@ Feature: Breadcrumbs for news content type
   Scenario: News details page using a path alias includes the proper links in the breadcrumb
     Given path breadcrumbs is enabled and configured
       And a news node [news] with node ID [nid] and URL alias [news_alias]
-    When  the /course-outlines/[news_alias] page is viewed
+    When  the /news/[news_alias] page is viewed
     Then  the page title should be "[news]"
       And the breadcrumbs should display only the 'Home' and 'News' links
