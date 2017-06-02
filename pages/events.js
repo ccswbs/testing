@@ -6,7 +6,7 @@ module.exports = {
 		errorMessage:Selector('.alert')
 	},
 	auth:{
-		
+
 	},
 	common:{
 		pageHeader:Selector('h1.page-header'),
@@ -15,6 +15,7 @@ module.exports = {
 				allDayEvent:Selector('td.multi-day').find('a')
 			}
 		},
-		relatedKeywords:Selector('.view-e6 .view-content')
+		relatedKeywords:Selector('.view-e6 .view-content'),
+		breadcrumb:Selector('.breadcrumb')
 	}
 };
