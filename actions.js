@@ -524,6 +524,50 @@ function bookFormat(data) {
 	};
 }
 
+ /**
+ * SERVICE Converts simplified JSON into the proper format to post to Drupal Services
+ * @param  {object} data Simplified JSON object containing node data
+ * @return {object}      JSON data in proper format to be posted
+ *
+ * Simplified structure:
+ * 	{
+ * 		type:"service",
+ * 		title:"Service Title",
+ * 		tid:21,
+ * 		description:{
+ * 			value:"Body text here.",
+ * 			format:"full_html|filtered_html|plain_text"
+ * 		},
+ * 		price:"$0.00"
+ * 		tags:"test, tags, here"
+ * 	}
+ */
+function serviceFormat(data) {
+	data.body = data.body || {};
+	return {
+		type:"book",
+		title:data.title,
+		field_service_description:{
+			und:[
+				{
+					value:data.description.value || "",
+					format:data.description.format || "filtered_html"
+				}
+			]
+		},
+		field_service_price:{
+			und:[
+				{
+					value:data.price || ""
+				}
+			]
+		},
+		field_tags:{
+			und:data.tags || ""
+		}
+	};
+}
+
 module.exports = {
 	Login:async function(t, user, pass) {
 		await t
