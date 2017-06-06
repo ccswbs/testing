@@ -292,20 +292,18 @@ async function beforeSearch(t) {
 	t.ctx.partial = t.ctx.lastName.substring(0,n);
 
 	// Create Profile to be searched for
-	t.ctx.profile_nid = await Actions.CreateNode({
-		type:"profile",
+	t.ctx.profile_nid = await Actions.CreateNode('profile', {
 		name:{
 			first:t.ctx.firstName,
 			last:t.ctx.lastName
-		},
+		}
 	});
 	// Create Profile to not be searched for
-	t.ctx.profile_nid2 = await Actions.CreateNode({
-		type:"profile",
+	t.ctx.profile_nid2 = await Actions.CreateNode('profile', {
 		name:{
 			first:t.ctx.firstName2,
 			last:t.ctx.lastName2
-		},
+		}
 	});
 }
 
