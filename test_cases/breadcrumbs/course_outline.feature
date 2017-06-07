@@ -14,13 +14,13 @@ Feature: Breadcrumbs for course outline content type
     Then  the page title should be "[term] Course Outlines"
       And the breadcrumbs should display only the 'Home' link followed by 'Course Outlines'
 
-  Scenario: Course outline listing page under menu follows menu structure in breadcrumb
+  Scenario: Course outline listing page under menu includes the proper links in the breadcrumb
     Given path breadcrumbs is enabled and configured
       And a course outline listing page as a child page
     When  the course outline listing page is viewed
-    Then  the breadcrumbs should display only the 'Home' link followed by parent pages
+    Then  the breadcrumbs should display only the 'Home' link
 
-  Scenario: Course outline listing page under menu filtered by term follows menu structure in breadcrumb
+  Scenario: Course outline listing page under menu filtered by term includes the proper links in the breadcrumb
     Given path breadcrumbs is enabled and configured
       And a course outline listing page as a child page
       And a course outline category term [term] with term ID [tid]
