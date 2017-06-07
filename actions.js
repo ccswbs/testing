@@ -534,6 +534,7 @@ function bookFormat(data) {
  * 		type:"service",
  * 		title:"Service Title",
  * 		tid:21,
+ * 		audience:[41, 42],
  * 		description:{
  * 			value:"Body text here.",
  * 			format:"full_html|filtered_html|plain_text"
@@ -544,9 +545,17 @@ function bookFormat(data) {
  */
 function serviceFormat(data) {
 	data.body = data.body || {};
-	return {
-		type:"book",
-		title:data.title,
+	data.description = data.descript || {};
+
+	var ret = {
+		type:'service',
+		title:data.title || Util.RandomName(4, 10),
+		field_service_category:{
+			und:data.tid
+		},
+		field_service_audience:{
+			und:{}
+		},
 		field_service_description:{
 			und:[
 				{
@@ -566,6 +575,12 @@ function serviceFormat(data) {
 			und:data.tags || ""
 		}
 	};
+
+	data.audience.forEach(function(el) {
+		ret.field_service_audience.und[el] = el;
+	});
+
+	return ret;
 }
 
 module.exports = {
@@ -643,9 +658,12 @@ module.exports = {
 				break;
 			case "course_outline":
 				data = courseOutlineFormat(node_data);
-        break;
+        		break;
 			case "book":
 				data = bookFormat(node_data);
+				break;
+			case "service":
+				data = serviceFormat(node_data);
 				break;
 			default:
 				return "Invalid node type."
