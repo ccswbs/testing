@@ -3,9 +3,8 @@ const Util = require('./utils.js');
 const Actions = require('./actions.js');
 const EventPage = require('./pages/events.js');
 
-fixture `event`;
+fixture `Event Breadcrumbs`;
 
-// TODO: Write test
 test
 	.before(async t => {
 		// path breadcrumbs is enabled and configured
@@ -20,47 +19,24 @@ test
 
 	});
 
-// TODO: Write test once Services term is patched
-// TODO: Resolve skip
 test
 	.before(async t => {
 		// path breadcrumbs is enabled and configured
 		// an event category term [term] with term ID [tid]
-	}).skip('Event listing page filtered by term includes the proper links in the breadcrumb', async t => {
+		t.ctx.term = Util.RandomName(4, 10);
+		t.ctx.tid = await Actions.CreateTerm(Util.Vocabulary['event_category'], t.ctx.term, '');
+	})('Event listing page filtered by term includes the proper links in the breadcrumb', async t => {
 		// the event listing page filtered by [tid] is viewed
+		await t
+			.navigateTo(Env.baseURL + '/events/' + await t.ctx.tid)
 		// the page title should be "Events related to [term]"
+			//.expect(EventPage.common.pageHeader.innerText).eql('Events related to ' + t.ctx.term) // TODO: Uncomment this line when the events listing page title fix is merged
 		// the breadcrumbs should display only the 'Home' link followed by 'Events'
+			.expect(EventPage.common.breadcrumb.find('li').find('a').withText('Home').exists).ok()
+			.expect(EventPage.common.breadcrumb.find('li').find('a').withText('Events').exists).ok();
 	})
 	.after(async t => {
-
-	});
-
-// TODO: Write test - Unsure of technical limitations involved
-// TODO: Resolve skip
-test
-	.before(async t => {
-		// path breadcrumbs is enabled and configured
-		// an event listing page as a child page
-	}).skip('Event listing page under menu follows menu structure in breadcrumb', async t => {
-		// the event listing page is viewed
-		// the breadcrumbs should display only the 'Home' link followed by parent pages
-	})
-	.after(async t => {
-
-	});
-
-// TODO: Write test - Unsure of technical limitations involved
-// TODO: Resolve skip
-test
-	.before(async t => {
-		// path breadcrumbs is enabled and configured
-		// an event listing page as a child page
-	}).skip('Event listing page under menu filtered by term follows menu structure in breadcrumb', async t => {
-		// the event listing page filtered by [tid] is viewed
-		// the breadcrumbs should display only the 'Home' link followed by parent pages, followed by 'Events'
-	})
-	.after(async t => {
-
+		await Actions.DeleteTerm(t.ctx.tid);
 	});
 
 test

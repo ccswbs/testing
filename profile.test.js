@@ -3,7 +3,7 @@ const Util = require('./utils.js');
 const Actions = require('./actions.js');
 const PeoplePage = require('./pages/people.js');
 
-fixture `profile`;
+fixture `Profile Breadcrumbs`;
 
 test
 	.before(async t => {
@@ -19,50 +19,26 @@ test
 
 	});
 
-// TODO: Write test once Services term is patched
-// TODO: Resolve skip
 test
 	.before(async t => {
 		// path breadcrumbs is enabled and configured
 		// a profile category term [term] with term ID [tid]
-	}).skip('Profile listing page filtered by term includes the proper links in the breadcrumb', async t => {
+		t.ctx.term = Util.RandomName(4, 10);
+		t.ctx.tid = await Actions.CreateTerm(Util.Vocabulary['profile_category'], t.ctx.term, '');
+	})('Profile listing page filtered by term includes the proper links in the breadcrumb', async t => {
 		// the profile listing page filtered by [tid] is viewed
+		await t
+			.navigateTo(Env.baseURL + '/people/' + t.ctx.tid)
 		// the page title should be "[term]"
+			//.expect(PeoplePage.common.pageHeader.innerText).eql(t.ctx.term)
 		// the breadcrumbs should display only the 'Home' link followed by 'People'
+			.expect(PeoplePage.common.breadcrumb.find('li').find('a').withText('Home').exists).ok()
+			.expect(PeoplePage.common.breadcrumb.find('li').find('a').withText('People').exists).ok();
 	})
 	.after(async t => {
-
+		await Actions.DeleteTerm(t.ctx.tid);
 	});
 
-// TODO: Write test - Unsure of technical limitations involved
-// TODO: Resolve skip
-test
-	.before(async t => {
-		// path breadcrumbs is enabled and configured
-		// a profile listing page as a child page
-	}).skip('Profile listing page under menu follows menu structure in breadcrumb', async t => {
-		// the profile listing page is viewed
-		// the breadcrumbs should display only the 'Home' link followed by parent pages
-	})
-	.after(async t => {
-
-	});
-
-// TODO: Write test - Unsure of technical limitations involved
-// TODO: Resolve skip
-test
-	.before(async t => {
-		// path breadcrumbs is enabled and configured
-		// a profile listing page as a child page
-	}).skip('Profile listing page under menu filtered by term follows menu structure in breadcrumb', async t => {
-		// the profile listing page filtered by [tid] is viewed
-		// the breadcrumbs should display only the 'Home' link followed by parent pages, followed by 'People'
-	})
-	.after(async t => {
-
-	});
-
-// TODO: Write test
 test
 	.before(async t => {
 		// path breadcrumbs is enabled and configured
@@ -88,7 +64,6 @@ test
 		await Actions.DeleteNode(t.ctx.nid);
 	});
 
-// TODO: Write test
 test
 	.before(async t => {
 		// path breadcrumbs is enabled and configured

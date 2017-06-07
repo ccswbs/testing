@@ -3,7 +3,7 @@ const Util = require('./utils.js');
 const Actions = require('./actions.js');
 const FAQPage = require('./pages/faq.js');
 
-fixture `faq`;
+fixture `FAQ Breadcrumbs`;
 
 test
 	.before(async t => {
@@ -19,46 +19,24 @@ test
 
 	});
 
-// TODO: Write test once Services term is patched
 test
 	.before(async t => {
 		// path breadcrumbs is enabled and configured
 		// an FAQ category term [term] with term ID [tid]
-	}).skip('FAQ listing page filtered by term includes the proper links in the breadcrumb', async t => {
+		t.ctx.term = Util.RandomName(4, 10);
+		t.ctx.tid = await Actions.CreateTerm(Util.Vocabulary['faq_category'], t.ctx.term, '');
+	})('FAQ listing page filtered by term includes the proper links in the breadcrumb', async t => {
 		// the FAQ listing page filtered by [tid] is viewed
+		await t
+			.navigateTo(Env.baseURL + '/faq/' + await t.ctx.tid)
 		// the page title should be "Frequently Asked Questions"
+			.expect(FAQPage.common.pageHeader.innerText).eql('Frequently Asked Questions')
 		// the breadcrumbs should display only the 'Home' link followed by 'FAQs'
+			.expect(FAQPage.common.breadcrumb.find('li').find('a').withText('Home').exists).ok()
+			.expect(FAQPage.common.breadcrumb.find('li').find('a').withText('FAQs').exists).ok();
 	})
 	.after(async t => {
-
-	});
-
-// TODO: Write test - Unsure of technical limitations involved
-// TODO: Resolve skip
-test
-	.before(async t => {
-		// path breadcrumbs is enabled and configured
-		// an FAQ listing page as a child page
-	}).skip('FAQ listing page under menu follows menu structure in breadcrumb', async t => {
-		// the FAQ listing page is viewed
-		// the breadcrumbs should display only the 'Home' link followed by parent pages
-	})
-	.after(async t => {
-
-	});
-
-// TODO: Write test - Unsure of technical limitations involved
-// TODO: Resolve skip
-test
-	.before(async t => {
-		// path breadcrumbs is enabled and configured
-		// an FAQ listing page as a child page
-	}).skip('FAQ listing page under menu filtered by term follows menu structure in breadcrumb', async t => {
-		// the FAQ listing page filtered by [tid] is viewed
-		// the breadcrumbs should display only the 'Home' link followed by parent pages, followed by 'FAQs'
-	})
-	.after(async t => {
-
+		await Actions.DeleteTerm(t.ctx.tid);
 	});
 
 test
