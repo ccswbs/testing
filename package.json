@@ -37,7 +37,9 @@
     "files": [
       "unit_tests/*.ava.js"
     ],
-    "require": ["babel-register"],
+    "require": [
+      "babel-register"
+    ],
     "babel": "inherit"
   }
 }
