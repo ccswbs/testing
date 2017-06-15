@@ -281,26 +281,23 @@ test
 	//Josh Donaldson
 	//In that order
 	await t
-	t.ctx.profile_nid = await Actions.CreateNode("Profile",{
+	t.ctx.profile_nid = await Actions.CreateNode("profile",{
 		name:{
 			first:"Roy",
 			last:"Halladay"
 		},
 	});
-	t.ctx.profile_nid2 = await Actions.CreateNode("Profile"{
+	t.ctx.profile_nid2 = await Actions.CreateNode("profile",{
 		name:{
 			first:"Jose",
 			last:"Bautista"
 		},
 	});
-	t.ctx.profile_nid3 = await Actions.CreateNode("Profile"{
+	t.ctx.profile_nid3 = await Actions.CreateNode("profile",{
 		name:{
 			first:"Josh",
 			last:"Donaldson"
 		},
-	});
-	t.ctx.page = await Actions.CreateNode({
-		type:"page"
 	});
 	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 
