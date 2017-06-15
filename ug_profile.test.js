@@ -280,7 +280,6 @@ test
 	//Jose Bautista
 	//Josh Donaldson
 	//In that order
-	await t
 	t.ctx.profile_nid = await Actions.CreateNode("profile",{
 		name:{
 			first:"Roy",
@@ -323,7 +322,6 @@ test
 	.expect(PeoplePage.common.resultTwo.textContent).contains("Josh Donaldson")
 	.expect(PeoplePage.common.resultThree.textContent).contains("Roy Halladay")
 }).after(async t => {
-	await t
 	await Actions.DeleteNode(t.ctx.profile_nid)
 	await Actions.DeleteNode(t.ctx.profile_nid2)
 	await Actions.DeleteNode(t.ctx.profile_nid3)
