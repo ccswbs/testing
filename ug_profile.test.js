@@ -273,6 +273,78 @@ test
 })
 .after(afterSearch);
 
+test
+.before(async t => {
+	//Create 3 profiles as follows
+	//Roy Halladay
+	//Jose Bautista
+	//Josh Donaldson
+	//In that order
+	await t
+	t.ctx.profile_nid = await Actions.CreateNode({
+		type:"profile",
+		name:{
+			first:"Roy",
+			last:"Halladay"
+		},
+	});
+	t.ctx.profile_nid2 = await Actions.CreateNode({
+		type:"profile",
+		name:{
+			first:"Jose",
+			last:"Bautista"
+		},
+	});
+	t.ctx.profile_nid3 = await Actions.CreateNode({
+		type:"profile",
+		name:{
+			first:"Josh",
+			last:"Donaldson"
+		},
+	});
+	t.ctx.page = await Actions.CreateNode({
+		type:"page"
+	});
+	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
+
+
+})
+('View PP6 sorts profiles by last name ascending', async t => {
+	//Go to /people
+	//Change view to PP6
+	//Check that names appear in last name alphabetical order
+	await t
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+
+	.click(PeoplePage.auth.panelsCustomizeButton)
+	.click(PeoplePage.auth.pp1DeleteButton)
+	.click(PeoplePage.auth.panelsAddToLeft)
+	.click(PeoplePage.auth.viewPanesLink)
+	.click(PeoplePage.auth.pp6Link)
+	.click(PeoplePage.auth.largeImageCheck)
+	.click(PeoplePage.auth.finishButton)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+	.expect(PeoplePage.common.resultOne.textContent).contains("Jose Bautista")
+	.expect(PeoplePage.common.resultTwo.textContent).contains("Josh Donaldson")
+	.expect(PeoplePage.common.resultThree.textContent).contains("Roy Halladay")
+}).after(async t => {
+	await t
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.click(PeoplePage.auth.panelsCustomizeButton)
+	.click(PeoplePage.auth.pp6DeleteButton)
+	.click(PeoplePage.auth.panelsAddToLeft)
+	.click(PeoplePage.auth.viewPanesLink)
+	.click(PeoplePage.auth.pp1Link)
+	.click(PeoplePage.auth.finishButton)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+	await Actions.DeleteNode(t.ctx.profile_nid)
+	await Actions.DeleteNode(t.ctx.profile_nid2)
+	await Actions.DeleteNode(t.ctx.profile_nid3)
+});
+
+
 async function beforeSearch(t) {
 	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 	//Create Names for dummy profiles
