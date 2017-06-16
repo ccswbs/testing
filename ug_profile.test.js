@@ -273,6 +273,72 @@ test
 })
 .after(afterSearch);
 
+test
+.before(async t => {
+	//Create 3 profiles as follows
+	//Roy Halladay
+	//Jose Bautista
+	//Josh Donaldson
+	//In that order
+	t.ctx.profile_nid = await Actions.CreateNode("profile",{
+		name:{
+			first:"Roy",
+			last:"Halladay"
+		},
+	});
+	t.ctx.profile_nid2 = await Actions.CreateNode("profile",{
+		name:{
+			first:"Jose",
+			last:"Bautista"
+		},
+	});
+	t.ctx.profile_nid3 = await Actions.CreateNode("profile",{
+		name:{
+			first:"Josh",
+			last:"Donaldson"
+		},
+	});
+	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
+
+
+})
+('View PP6 sorts profiles by last name ascending', async t => {
+	//Go to /people
+	//Change view to PP6
+	//Check that names appear in last name alphabetical order
+	await t
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+
+	.click(PeoplePage.auth.panelsCustomizeButton).wait(100)
+	.click(PeoplePage.auth.pp1DeleteButton).wait(100)
+	.click(PeoplePage.auth.panelsAddToLeft).wait(100)
+	.click(PeoplePage.auth.viewPanesLink).wait(100)
+	.click(PeoplePage.auth.pp6Link).wait(100)
+	.click(PeoplePage.auth.largeImageCheck).wait(100)
+	.click(PeoplePage.auth.finishButton).wait(100)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+	.expect(PeoplePage.common.resultOne.textContent).contains("Jose Bautista")
+	.expect(PeoplePage.common.resultTwo.textContent).contains("Josh Donaldson")
+	.expect(PeoplePage.common.resultThree.textContent).contains("Roy Halladay")
+}).after(async t => {
+	await Actions.DeleteNode(t.ctx.profile_nid)
+	await Actions.DeleteNode(t.ctx.profile_nid2)
+	await Actions.DeleteNode(t.ctx.profile_nid3)
+	await t
+	.navigateTo(Env.baseURL + PeoplePage.URL).wait(500)
+	.setNativeDialogHandler(() => true)
+	.click(PeoplePage.auth.panelsCustomizeButton).wait(100)
+	.click(PeoplePage.auth.pp6DeleteButton).wait(100)
+	.click(PeoplePage.auth.panelsAddToLeft).wait(100)
+	.click(PeoplePage.auth.viewPanesLink).wait(100)
+	.click(PeoplePage.auth.pp1Link).wait(100)
+	.click(PeoplePage.auth.finishButton).wait(100)
+	.wait(500).click(PeoplePage.auth.panelsSaveButton)
+
+});
+
+
 async function beforeSearch(t) {
 	await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 	//Create Names for dummy profiles

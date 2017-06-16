@@ -37,6 +37,9 @@ module.exports = {
 		searchByLastNameBoxPP5:Selector('#edit-field-profile-lastname-value-1'),
 		ppSearchButton:Selector('button').withText('Apply'),
 		listingArea:Selector('div.view-content'),
-		noResults:Selector('div.view-empty')
+		noResults:Selector('div.view-empty'),
+		resultOne:Selector('div.views-row-1'),
+		resultTwo:Selector('div.views-row-2'),
+		resultThree:Selector('div.views-row-3')
 	}
 };

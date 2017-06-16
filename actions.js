@@ -574,7 +574,7 @@ module.exports = {
 		}).then(function(body) {
 			res = true;
 		}).catch(function(err) {
-			if(err) console.log(err.message);	
+			if(err) console.log(err.message);
 		});
 
 		return res;
