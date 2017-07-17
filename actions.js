@@ -292,6 +292,7 @@ function eventFormat(data) {
 function profileFormat(data) {
 	data.role = data.role || {};
 	data.summary = data.summary || {};
+	data.teaser = data.teaser || {};
 	data.info_fields = data.info_fields || {};
 	data.name = data.name || {};
 	var post = {
@@ -332,13 +333,27 @@ function profileFormat(data) {
 				}
 			]
 		},
+		field_profile_teaser:{
+			und:[
+				{
+					value:data.teaser.body || "",
+					format:data.teaser.format || "filtered_html"
+				}
+			]
+		},
 		field_tags:{
 			und:data.tags || ""
 		}
 	};
 
 	for(var field in data.info_fields) {
-		post["field_profile_" + field] = data.info_fields[field];
+		let data_container = {und:[
+			{
+				value:data.info_fields[field],
+			}
+		]};
+
+		post["field_profile_" + field] = data_container;
 	}
 
 	return post;
