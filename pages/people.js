@@ -26,7 +26,25 @@ module.exports = {
 		pp5DeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP5 - People profile listing filtered by keyword').prevSibling(0).find('.delete').find('a'),
 		pp5NoPicturesDeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP5 - People profile listing filtered by keyword: No pictures').prevSibling(0).find('.delete').find('a'),
 		pp1DeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP1 - Listing page for multiple people profiles').prevSibling(0).find('.delete').find('a'),
-
+		pp1:{
+			selectViewPane:Selector('a').find('span').withText('View: PP1 - Listing page for multiple people profiles'),
+			deleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP1 - Listing page for multiple people profiles').prevSibling(0).find('.delete').find('a'),
+		},
+		pp6:{
+			selectViewPane:Selector('a').find('span').withText('View: PP6 Custom Listing'),
+			deleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP6 Custom Listing').prevSibling(0).find('.delete').find('a'),
+			editButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP6 Custom Listing').prevSibling(0).find('.edit').find('a'),
+		},
+		pp7:{
+			selectViewPane:Selector('a').find('span').withText('View: PP7 - People profile teaser list'),
+			paneTitle:Selector('.pane-pp7-panel-pane-1').find('.pane-title'),
+			paneMoreButton:Selector('.pane-pp7-panel-pane-1').find('.view-content').nextSibling('.btn-group').find('a'),
+			deleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP7 - People profile teaser list').prevSibling(0).find('.delete').find('a'),
+			editButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP7 - People profile teaser list').prevSibling(0).find('.edit').find('a'),
+			editItemsPerPage:Selector('#edit-items-per-page'),
+			editFilterByTermID:Selector('#edit-arguments-tid'),
+			editMoreButtonTextfield:Selector('#edit-more-text'),
+		}
 	},
 	common:{
 		pageHeader:Selector('h1.page-header'),
@@ -40,6 +58,15 @@ module.exports = {
 		noResults:Selector('div.view-empty'),
 		resultOne:Selector('div.views-row-1'),
 		resultTwo:Selector('div.views-row-2'),
-		resultThree:Selector('div.views-row-3')
+		resultThree:Selector('div.views-row-3'),
+		pp6:{
+			viewPane:Selector('.view-id-pp6'),
+			paneTitle:Selector('.view-id-pp6').find('.media-heading').find('a'),
+			paneTeaser:Selector('.view-id-pp6').find('.media-teaser'),
+			paneSummary:Selector('.view-id-pp6').find('.media-summary').find('p'),
+		},
+		pp7:{
+			viewPane:Selector('.view-id-pp7'),
+		}
 	}
 };
