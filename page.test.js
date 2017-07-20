@@ -73,7 +73,7 @@ test
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit').wait(1000)
+			.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit').wait(500)
 			.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.saveButton);
 	})('Page at top level of menu using path alias includes the proper links in the breadcrumb', async t => {
@@ -101,7 +101,7 @@ test
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit').wait(1000)
+			.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit').wait(500)
 			.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.saveButton);
 
@@ -141,7 +141,7 @@ test
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit').wait(1000)
+			.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit').wait(500)
 			.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.saveButton);
 
