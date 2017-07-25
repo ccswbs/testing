@@ -101,13 +101,13 @@ test
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit').wait(500)
+			.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit').wait(1000)
 			.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.saveButton);
 
 		await t
 			.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit').wait(1000)
-			.click(EditPage.auth.enableMenuCheck).wait(500)
+			.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
