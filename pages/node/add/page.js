@@ -4,7 +4,7 @@ module.exports = {
 	URL:'/node/add/profile',
 	auth:{
 		pageTitle:Selector('h1.page-title'),
-		enableMenuCheck:Selector('#edit-menu-enabled', {visibilityCheck:true}),
+		enableMenuCheck:Selector('label', {visibilityCheck:true}).withAttribute('for', 'edit-menu-enabled'),
 		menuParentSelect:Selector('#edit-menu-parent', {visibilityCheck:true}),
 		saveButton:Selector('#edit-submit', {visibilityCheck:true}),
 		deleteButton:Selector('#edit-delete', {visibilityCheck:true}),
