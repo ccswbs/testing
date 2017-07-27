@@ -51,8 +51,6 @@ test
 		});
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit');
-
 	})('Page at top level of menu includes the proper links in the breadcrumb', async t => {
 		// the /node/[nid] page is viewed
 		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.nid);
@@ -106,9 +104,11 @@ test
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 
 		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit');
-		const ckeditor = Selector('#cke_edit-field-page-body-und-0-value', { visibilityCheck:true, timeout:10000 });
+		await t.eval(() => new Promise(resolve => setInterval(function() {
+        if(jQuery('#cke_edit-field-page-body-und-0-value').length > 0) resolve();
+    }, 500)));
 		await t
-			.click(EditPage.auth.menuParentSelect, {speed:0.5})
+			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
 
@@ -150,6 +150,9 @@ test
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 
 		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit');
+		await t.eval(() => new Promise(resolve => setInterval(function() {
+        if(jQuery('#cke_edit-field-page-body-und-0-value').length > 0) resolve();
+    }, 500)));
 		await t
 			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
