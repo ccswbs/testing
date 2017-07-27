@@ -44,19 +44,20 @@ test
 test
 	.before(async t => {
 		// a basic page node [page] with node ID [nid]
-		t.ctx.nid = await Actions.CreateNode('page', {});
+		t.ctx.nid = await Actions.CreateNode('page', {
+			menu:{
+				enabled:true
+			}
+		});
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit');
-		await t
-			.click(EditPage.auth.enableMenuCheck)
-			.click(EditPage.auth.saveButton);
+
 	})('Page at top level of menu includes the proper links in the breadcrumb', async t => {
 		// the /node/[nid] page is viewed
-		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.nid)
+		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.nid);
 		// the breadcrumbs should display only the 'Home' link
-			.expect(Page.common.breadcrumb.find('li').find('a').withText('Home').exists).ok();
+		await t.expect(Page.common.breadcrumb.find('li').find('a').withText('Home').exists).ok();
 	})
 	.after(async t => {
 		await Actions.DeleteNode(t.ctx.nid);
@@ -75,10 +76,9 @@ test
 		});
 	})('Page at top level of menu using path alias includes the proper links in the breadcrumb', async t => {
 		// the /[page_alias] page is viewed
-		await t
-			.navigateTo('/' + t.ctx.page_alias)
+		await t.navigateTo(Env.baseURL + '/' + t.ctx.page_alias);
 			// the breadcrumbs should display only the 'Home' link
-			.expect(Page.common.breadcrumb.find('li').find('a').withText('Home').exists).ok();
+		await t.expect(Page.common.breadcrumb.find('li').find('a').withText('Home').exists).ok();
 	})
 	.after(async t => {
 		await Actions.DeleteNode(t.ctx.nid);
@@ -110,8 +110,10 @@ test
 			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
+
 	})('Page on a sublevel of menu includes the proper links in the breadcrumb', async t => {
 		// the /node/[nid] page is viewed
+
 		await t
 			.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid)
 		// the breadcrumbs should display only the 'Home' link followed by the [parent] link
@@ -151,8 +153,10 @@ test
 			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
+
 	})('Page on a sublevel of menu using path alias includes the proper links in the breadcrumb', async t => {
 		// the /[parent_alias]/[child_alias] page is viewed
+
 		await t
 		// the breadcrumbs should display only the 'Home' link followed by the [parent] link
 			.expect(Page.common.breadcrumb.find('li').find('a').withText('Home').exists).ok()

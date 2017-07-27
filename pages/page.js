@@ -5,6 +5,6 @@ module.exports = {
 	anon:{},
 	auth:{},
 	common:{
-		breadcrumb:Selector('.breadcrumb')
+		breadcrumb:Selector('.breadcrumb', {visibilityCheck:true})
 	}
 };
