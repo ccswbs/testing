@@ -47,8 +47,8 @@ test
 		t.ctx.nid = await Actions.CreateNode('page', {});
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
+		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit');
 		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit')
 			.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.saveButton);
 	})('Page at top level of menu includes the proper links in the breadcrumb', async t => {
@@ -76,7 +76,8 @@ test
 	})('Page at top level of menu using path alias includes the proper links in the breadcrumb', async t => {
 		// the /[page_alias] page is viewed
 		await t
-		// the breadcrumbs should display only the 'Home' link
+			.navigateTo('/' + t.ctx.page_alias)
+			// the breadcrumbs should display only the 'Home' link
 			.expect(Page.common.breadcrumb.find('li').find('a').withText('Home').exists).ok();
 	})
 	.after(async t => {
@@ -104,8 +105,8 @@ test
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 
+		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit');
 		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit').wait(1000)
 			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
@@ -145,9 +146,8 @@ test
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 
+		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit');
 		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit').wait(1000)
-			//.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
