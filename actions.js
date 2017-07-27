@@ -54,16 +54,25 @@ async function getLoginHeaders(user, pass) {
  *    		summary:this.value,
  *       	format:"full_html|filtered_html|plain_text"
  * 		}
- * 		tags:"test, tags, here"
+ * 		tags:"test, tags, here",
+ * 		menu:{
+ * 			enabled:true|false,
+ * 			link_title:"Page Title",
+ * 			description:"Link description",
+ * 			parent:"main-menu:601",
+ * 			weight:0
+ * 		}
  *  }
  *
  */
 function pageFormat(data) {
 	data.body = data.body || {};
+	data.title = data.title || Util.RandomName(4, 10);
+	data.menu = data.menu || {};
 
 	return {
 		type:"page",
-		title:data.title || Util.RandomName(4, 10),
+		title:data.title,
 		field_page_body:{
 			und:[
 				{
@@ -78,6 +87,13 @@ function pageFormat(data) {
 		},
 		field_tags:{
 			und:data.tags || ""
+		},
+		menu:{
+			enabled:data.menu.enabled || false,
+			link_title:data.menu.title || data.title,
+			description:data.menu.description || '',
+			parent:data.menu.parent || 'main-menu:0',
+			weight:data.menu.weight || 0
 		}
 	};
 }
@@ -633,7 +649,7 @@ module.exports = {
 		}).then(function(body) {
 			res = true;
 		}).catch(function(err) {
-			if(err) console.log(err.message);	
+			if(err) console.log(err.message);
 		});
 
 		return res;
