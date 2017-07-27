@@ -73,10 +73,6 @@ test
 				enabled:true
 			}
 		});
-
-		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit');
-		await t.click(EditPage.auth.saveButton);
 	})('Page at top level of menu using path alias includes the proper links in the breadcrumb', async t => {
 		// the /[page_alias] page is viewed
 		await t
@@ -107,8 +103,6 @@ test
 		});
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit');
-		await t.click(EditPage.auth.saveButton);
 
 		await t
 			.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit').wait(1000)
@@ -150,8 +144,6 @@ test
 		});
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit');
-		await t.click(EditPage.auth.saveButton);
 
 		await t
 			.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit').wait(1000)
