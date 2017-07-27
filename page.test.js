@@ -68,13 +68,16 @@ test
 		t.ctx.page = Util.RandomName(4, 10);
 		t.ctx.page_alias = t.ctx.page.toLowerCase().replace(' ', '-');
 		t.ctx.nid = await Actions.CreateNode('page', {
-			title:t.ctx.page
+			title:t.ctx.page,
+			menu:{
+				enabled:true
+			}
 		});
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		await t
-			.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit').wait(500)
-			.click(EditPage.auth.enableMenuCheck)
+			.navigateTo(Env.baseURL + '/node/' + t.ctx.nid + '/edit')
+			//.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.saveButton);
 	})('Page at top level of menu using path alias includes the proper links in the breadcrumb', async t => {
 		// the /[page_alias] page is viewed
@@ -91,23 +94,28 @@ test
 		// a basic page node [parent] with node ID [pnid]
 		t.ctx.parent = Util.RandomName(4, 10);
 		t.ctx.pnid = await Actions.CreateNode('page', {
-			title:t.ctx.parent
+			title:t.ctx.parent,
+			menu:{
+				enabled:true
+			}
 		});
 		// a basic page node [child] with node ID [cnid]
 		t.ctx.child = Util.RandomName(4, 10);
 		t.ctx.cnid = await Actions.CreateNode('page', {
-			title:t.ctx.child
+			title:t.ctx.child,
+			menu:{
+				enabled:true
+			}
 		});
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		await t
 			.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit').wait(1000)
-			.click(EditPage.auth.enableMenuCheck)
+			//.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.saveButton);
 
 		await t
 			.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit').wait(1000)
-			.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
@@ -130,24 +138,30 @@ test
 		t.ctx.parent = Util.RandomName(4, 10);
 		t.ctx.parent_alias = t.ctx.parent.toLowerCase().replace(' ', '-');
 		t.ctx.pnid = await Actions.CreateNode('page', {
-			title:t.ctx.parent
+			title:t.ctx.parent,
+			menu:{
+				enabled:true
+			}
 		});
 		// a basic page node [child] with node ID [cnid] and alias [child_alias]
 		t.ctx.child = Util.RandomName(4, 10);
 		t.ctx.child_alias = t.ctx.child.toLowerCase().replace(' ', '-');
 		t.ctx.cnid = await Actions.CreateNode('page', {
-			title:t.ctx.child
+			title:t.ctx.child,
+			menu:{
+				enabled:true
+			}
 		});
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		await t
 			.navigateTo(Env.baseURL + '/node/' + t.ctx.pnid + '/edit').wait(1000)
-			.click(EditPage.auth.enableMenuCheck)
+			//.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.saveButton);
 
 		await t
 			.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit').wait(1000)
-			.click(EditPage.auth.enableMenuCheck)
+			//.click(EditPage.auth.enableMenuCheck)
 			.click(EditPage.auth.menuParentSelect)
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
