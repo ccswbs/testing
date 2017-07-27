@@ -21,7 +21,7 @@
     "babel-preset-latest": "^6.24.1",
     "jsdoc": "^3.4.3",
     "tap-nyan": "^1.1.0",
-    "testcafe": "^0.13.0",
+    "testcafe": "^0.16.2",
     "testcafe-browser-provider-nightmare": "0.0.4"
   },
   "dependencies": {
