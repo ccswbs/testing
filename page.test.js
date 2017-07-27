@@ -105,9 +105,10 @@ test
 
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 
-		await t.navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit');
+		await t.debug().navigateTo(Env.baseURL + '/node/' + t.ctx.cnid + '/edit');
+		const ckeditor = Selector('#cke_edit-field-page-body-und-0-value', { visibilityCheck:true, timeout:10000 });
 		await t
-			.click(EditPage.auth.menuParentSelect)
+			.click(EditPage.auth.menuParentSelect, {speed:0.5})
 			.click(EditPage.auth.menuParentSelect.find('option').withText('-- ' + t.ctx.parent))
 			.click(EditPage.auth.saveButton);
 
