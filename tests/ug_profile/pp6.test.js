@@ -272,7 +272,7 @@ async function showPP6(t){
 async function editPP6(t){
 
 	await t
-		.navigateTo(Env.baseURL).wait(300)
+		.navigateTo(Env.baseURL + "/front").wait(300)
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
 		.click(PeoplePage.auth.panelsCustomizeButton).wait(300)

@@ -27,14 +27,14 @@ fixture `UG Profile PP7 Teaser List View`
 		let numChecks = 20;
 		let testPasses = false;
 
-		await t.navigateTo(Env.baseURL);
+		await t.navigateTo(Env.baseURL + "/front");
 
 		// collect first name to compare against
 		baseProfileName = await Selector('.view-id-pp7').find('.media-heading').find('a').textContent;
 
 		for(let i=0;i<numChecks;i++){
 			//refresh page and collect first name
-			await t.navigateTo(Env.baseURL);
+			await t.navigateTo(Env.baseURL + "/front");
 			let profileName = await Selector('.view-id-pp7').find('.media-heading').find('a').textContent;
 
 			if(profileName !== baseProfileName){
@@ -66,7 +66,7 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	('Selected fields show on Profiles PP7 teaser list view', async t => {
 
-		await t.navigateTo(Env.baseURL);
+		await t.navigateTo(Env.baseURL + "/front");
 
 		let profileTitle = await Selector('.view-id-pp7').find('.media-heading').find('a').textContent;
 		let profileTitleVisible = await Selector('.view-id-pp7').find('.media-heading').find('a').visible;
@@ -106,7 +106,7 @@ fixture `UG Profile PP7 Teaser List View`
 		await showPP7(t);
 	})
 	('Title can be overridden on Profiles PP7 teaser list view', async t => {		
-		await t.navigateTo(Env.baseURL);
+		await t.navigateTo(Env.baseURL + "/front");
 	    
 		let overrideTitleCheckbox = await Selector('#override-title-checkbox');
 		let overrideTitleTextfield = await Selector('#override-title-textfield');
@@ -150,7 +150,7 @@ fixture `UG Profile PP7 Teaser List View`
 		await showPP7(t);
 	})
 	('More button text can be overridden on Profiles PP7 teaser list view', async t => {		
-		await t.navigateTo(Env.baseURL);
+		await t.navigateTo(Env.baseURL + "/front");
 	    
 		let moreButtonTextfield = await Selector('#edit-more-text');
 		let newText = "Overridden PP7 More Button";
@@ -209,7 +209,7 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	('Profiles PP7 teaser list view can be filtered by category term by Site Manager', async t => {
 		let filteredMoreURL = '/people/' + t.ctx.categoryTermID;
-		await t.navigateTo(Env.baseURL);
+		await t.navigateTo(Env.baseURL + "/front");
 
 		await editPP7(t);
 		await t
@@ -294,7 +294,7 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	('Profiles PP7 teaser list view can be filtered by keyword term by Site Manager', async t => {
 		let filteredMoreURL = '/people/' + t.ctx.keywordTermID;
-		await t.navigateTo(Env.baseURL);
+		await t.navigateTo(Env.baseURL + "/front");
 
 		await editPP7(t);
 		await t
@@ -503,7 +503,7 @@ async function removeProfiles(t, nodes){
 async function showPP7(t){
 
 	await t
-		.navigateTo(Env.baseURL).wait(300)
+		.navigateTo(Env.baseURL + "/front").wait(300)
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
 		.click(PeoplePage.auth.panelsCustomizeButton).wait(300)
@@ -526,7 +526,7 @@ async function showPP7(t){
 async function editPP7(t){
 
 	await t
-		.navigateTo(Env.baseURL).wait(300)
+		.navigateTo(Env.baseURL + "/front").wait(300)
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
 		.click(PeoplePage.auth.panelsCustomizeButton).wait(300)
@@ -542,7 +542,7 @@ async function editPP7(t){
 
 async function hidePP7(t){
 	await t
-		.navigateTo(Env.baseURL).wait(300)
+		.navigateTo(Env.baseURL + "/front").wait(300)
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
 		.click(PeoplePage.auth.panelsCustomizeButton).wait(300)
