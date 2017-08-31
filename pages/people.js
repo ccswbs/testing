@@ -26,6 +26,9 @@ module.exports = {
 		pp5DeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP5 - People profile listing filtered by keyword').prevSibling(0).find('.delete').find('a'),
 		pp5NoPicturesDeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP5 - People profile listing filtered by keyword: No pictures').prevSibling(0).find('.delete').find('a'),
 		pp1DeleteButton:Selector('.panels-ipe-dragbar-admin-title').withText('View: PP1 - Listing page for multiple people profiles').prevSibling(0).find('.delete').find('a'),
+		categorySelectTerm1:Selector('option').withText('Term 1'),
+		categorySelectTerm2:Selector('option').withText('Term 2'),
+		saveButton:Selector('#edit-submit'),
 
 	},
 	common:{
@@ -40,6 +43,9 @@ module.exports = {
 		noResults:Selector('div.view-empty'),
 		resultOne:Selector('div.views-row-1'),
 		resultTwo:Selector('div.views-row-2'),
-		resultThree:Selector('div.views-row-3')
+		resultThree:Selector('div.views-row-3'),
+		listPerson:Selector('h2.media-heading'),
+		noResults:Selector('div.view-empty'),
+
 	}
 };
