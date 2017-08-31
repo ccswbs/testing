@@ -65,7 +65,7 @@ fixture `UG Profile PP6 List View`
 
 	})
 	.after(async t => {
-		await hidePP6(t);
+		await Actions.revertCustomPage(t,CustomizePage.auth.people.filteredByTag);
 		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
@@ -95,12 +95,21 @@ async function showPP6(t){
 		.click(PeoplePage.auth.panelsCustomizeButton);
 
 	// Empty Left Region of view panes
-	await repeatClick(t,buttonToEmptyLeftRegion);
+	await Actions.repeatClick(t,buttonToEmptyLeftRegion);
 
 	await t
 		// open Left Region
 		.click(PeoplePage.auth.panelsAddToLeft)
-		.click(PeoplePage.auth.viewPanesLink)
+		.click(PeoplePage.auth.viewPanesLink);
+
+	await t
+		// wait for Select PP7 View Pane to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('a.add-content-link-pp6-panel-pane-1-icon-text-button').length > 0) resolve();
+		}, 500)));
+
+
+	await t
 		// add PP6 View Pane
 		.click(PeoplePage.auth.pp6.selectViewPane)
 		.click(PeoplePage.auth.finishButton);
@@ -139,58 +148,4 @@ async function editPP6(t){
 		.click(PeoplePage.auth.panelsCustomizeButton)
 		// open Edit cog
 		.click(PeoplePage.auth.pp6.editButton);
-}
-
-/**
-* Hides PP6 view pane on baseURL
-* 
-* @param  {object} t  Test controller
-*/
-
-async function hidePP6(t){
-	await revertCustomPage(t,CustomizePage.auth.people.filteredByTag);
-}
-
-/**
-* @TODO: Move function to a more generic location
-*
-* Reverts a custom page to its default state
-* 
-* @param  {object} t  			Test controller
-* @param  {object} customPage   Selector for customPage to revert
-*/
-
-async function revertCustomPage(t, customPage){
-	await t
-		.navigateTo(Env.baseURL + CustomizePage.URL)
-		.setNativeDialogHandler(() => true)
-		// select Custom Page to Revert
-		.click(customPage)
-		// select Revert Tab
-		.click(CustomizePage.auth.revertTab)
-		// select Revert Button
-		.click(CustomizePage.auth.revertButton);
-}
- 
-
-/**
-* @TODO: Move function to a more generic location
-*
-* Clicks an element until the element no longer exists in the DOM.
-* Useful for clearing a region of view panes by repeatedly clicking the delete button.
-* 
-* @param   {object} t             Test controller
-* @param   {object} clickElement  Element to click
-*
-*/
-
-async function repeatClick(t,clickElement){
-	let elementExists = await clickElement.exists;
-	let numElements = await clickElement.count;
-
-	if(elementExists == true){
-		for(let i=0;i<numElements;i++){
-			await t.click(clickElement);
-		}
-	}
 }

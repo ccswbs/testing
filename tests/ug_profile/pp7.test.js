@@ -3,6 +3,7 @@ const Util = require('../../utils.js');
 const Actions = require('../../actions.js');
 const UserPage = require('../../pages/user.js');
 const PeoplePage = require('../../pages/people.js');
+const CustomizePage = require('../../pages/admin/structure/pages.js');
 const Faker = require('faker');
 
 import { Selector } from 'testcafe';
@@ -48,7 +49,7 @@ fixture `UG Profile PP7 Teaser List View`
 
 	})
 	.after(async t => {
-		await hidePP7(t);
+		await Actions.revertCustomPage(t,CustomizePage.auth.front);
 		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
@@ -86,7 +87,7 @@ fixture `UG Profile PP7 Teaser List View`
 
 	})
 	.after(async t => {
-		await hidePP7(t);
+		await Actions.revertCustomPage(t,CustomizePage.auth.front);
 		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
@@ -138,7 +139,7 @@ fixture `UG Profile PP7 Teaser List View`
 		    .expect(PeoplePage.auth.pp7.paneTitle.textContent).contains(overriddenText,'Title cannot be overridden on Profiles PP7 teaser list view.');
 	})
 	.after(async t => {
-		await hidePP7(t);
+		await Actions.revertCustomPage(t,CustomizePage.auth.front);
 		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
@@ -191,7 +192,7 @@ fixture `UG Profile PP7 Teaser List View`
 		    .expect(PeoplePage.auth.pp7.paneMoreButton.textContent).contains(newText,'More button text cannot be overridden on Profiles PP7 teaser list view.');
 	})
 	.after(async t => {
-		await hidePP7(t);
+		await Actions.revertCustomPage(t,CustomizePage.auth.front);
 		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
@@ -281,7 +282,7 @@ fixture `UG Profile PP7 Teaser List View`
 
 	})
 	.after(async t => {
-		await hidePP7(t);
+		await Actions.revertCustomPage(t,CustomizePage.auth.front);
 		await Actions.removeProfiles(await t, t.ctx.regularNodes);
 		await Actions.removeProfiles(await t, t.ctx.categorizedNodes);
 		await Actions.removeTerms(await t, t.ctx.allTerms);
@@ -381,7 +382,7 @@ fixture `UG Profile PP7 Teaser List View`
 
 	})
 	.after(async t => {
-		await hidePP7(t);
+		await Actions.revertCustomPage(t,CustomizePage.auth.front);
 		await Actions.removeProfiles(await t, t.ctx.regularNodes);
 		await Actions.removeProfiles(await t, t.ctx.termedNodes);
 		await Actions.removeTerms(await t, t.ctx.allTerms);
@@ -457,32 +458,4 @@ async function editPP7(t){
 		.click(PeoplePage.auth.panelsCustomizeButton)
 		// open Edit cog
 		.click(PeoplePage.auth.pp7.editButton);
-}
-
-/**
-* Hides PP7 view pane on baseURL
-* 
-* @param  {object} t  Test controller
-*/
-
-async function hidePP7(t){
-	await t
-		.navigateTo(Env.baseURL + "/front");
-
-	await t
-		// wait for Customize In-Place Editor button to show
-		.eval(() => new Promise(resolve => setInterval(function() {
-	        if(jQuery('#panels-ipe-customize-page').length > 0) resolve();
-		}, 500)));
-
-	await t
-		.setNativeDialogHandler(() => true)
-		// open In-Place Editor
-		.click(PeoplePage.auth.panelsCustomizeButton)
-		// remove PP7 View Pane
-		.click(PeoplePage.auth.pp7.deleteButton)
-		// wait for dialog handler to show
-		.wait(500)
-		// save In-Place Editor
-		.click(PeoplePage.auth.panelsSaveButton);
 }
