@@ -123,9 +123,17 @@ fixture `UG Profile PP7 Teaser List View`
 			.typeText(overrideTitleTextfield,overriddenText,{ replace: true })
 			.expect(overrideTitleTextfield.value).eql(overriddenText)
 			// Close Edit PP7 view pane dialog
-	    	.click(PeoplePage.auth.finishButton).wait(300)
+	    	.click(PeoplePage.auth.finishButton);
+
+		await t
+			// wait for Save button to show
+			.eval(() => new Promise(resolve => setInterval(function() {
+		        if(jQuery('#panels-ipe-save').length > 0) resolve();
+			}, 500)));
+
+	    await t
 			// save In-Place Editor
-			.click(PeoplePage.auth.panelsSaveButton).wait(300)
+			.click(PeoplePage.auth.panelsSaveButton)
 		    // PP7 title displays overridden title
 		    .expect(PeoplePage.auth.pp7.paneTitle.textContent).contains(overriddenText,'Title cannot be overridden on Profiles PP7 teaser list view.');
 	})
@@ -168,9 +176,17 @@ fixture `UG Profile PP7 Teaser List View`
 			// Set number of items in teaser view
 			.typeText(editItemsPerPage,itemsPerPage,{ replace: true })
 			// Close Edit PP7 view pane dialog
-	    	.click(PeoplePage.auth.finishButton).wait(300)
+	    	.click(PeoplePage.auth.finishButton);
+
+		await t
+			// wait for Save button to show
+			.eval(() => new Promise(resolve => setInterval(function() {
+		        if(jQuery('#panels-ipe-save').length > 0) resolve();
+			}, 500)));
+
+	    await t
 			// save In-Place Editor
-			.click(PeoplePage.auth.panelsSaveButton).wait(300)
+			.click(PeoplePage.auth.panelsSaveButton)
 		    // PP7 more button displays overridden text
 		    .expect(PeoplePage.auth.pp7.paneMoreButton.textContent).contains(newText,'More button text cannot be overridden on Profiles PP7 teaser list view.');
 	})
@@ -218,9 +234,17 @@ fixture `UG Profile PP7 Teaser List View`
 			// Display all results
 			.typeText(PeoplePage.auth.pp7.editItemsPerPage,"0",{ replace: true })
 			// Close Edit PP7 view pane dialog
-	    	.click(PeoplePage.auth.finishButton).wait(300)
+	    	.click(PeoplePage.auth.finishButton);
+
+		await t
+			// wait for Save button to show
+			.eval(() => new Promise(resolve => setInterval(function() {
+		        if(jQuery('#panels-ipe-save').length > 0) resolve();
+			}, 500)));
+
+	    await t
 			// save In-Place Editor
-			.click(PeoplePage.auth.panelsSaveButton).wait(300);
+			.click(PeoplePage.auth.panelsSaveButton);
 
 		// Profiles displayed in PP7 teaser view are filtered by category term
 		for(let i=0;i<t.ctx.categorizedNodes.length;i++) {
@@ -240,9 +264,17 @@ fixture `UG Profile PP7 Teaser List View`
 			// Display 1 result to show more button
 			.typeText(PeoplePage.auth.pp7.editItemsPerPage,"1",{ replace: true })
 			// Close Edit PP7 view pane dialog
-	    	.click(PeoplePage.auth.finishButton).wait(300)
+	    	.click(PeoplePage.auth.finishButton);
+
+		await t
+			// wait for Save button to show
+			.eval(() => new Promise(resolve => setInterval(function() {
+		        if(jQuery('#panels-ipe-save').length > 0) resolve();
+			}, 500)));
+
+		await t
 			// save In-Place Editor
-			.click(PeoplePage.auth.panelsSaveButton).wait(300)
+			.click(PeoplePage.auth.panelsSaveButton)
 		    // PP7 more button links to people/categoryTermID
 		    .expect(PeoplePage.auth.pp7.paneMoreButton.getAttribute('href')).contains(filteredMoreURL,'When PP7 is filtered by category, PP7 More button url does not link to people/[category term ID].');
 
@@ -303,9 +335,17 @@ fixture `UG Profile PP7 Teaser List View`
 			// Display all results
 			.typeText(PeoplePage.auth.pp7.editItemsPerPage,"0",{ replace: true })
 			// Close Edit PP7 view pane dialog
-	    	.click(PeoplePage.auth.finishButton).wait(300)
+	    	.click(PeoplePage.auth.finishButton);
+
+		await t
+			// wait for Save button to show
+			.eval(() => new Promise(resolve => setInterval(function() {
+		        if(jQuery('#panels-ipe-save').length > 0) resolve();
+			}, 500)));
+
+	    await t
 			// save In-Place Editor
-			.click(PeoplePage.auth.panelsSaveButton).wait(300);
+			.click(PeoplePage.auth.panelsSaveButton);
 
 		// Profiles displayed in PP7 teaser view are filtered by keyword term
 		for(let i=0;i<t.ctx.termedNodes.length;i++) {
@@ -325,9 +365,17 @@ fixture `UG Profile PP7 Teaser List View`
 			// Display 1 result to show more button
 			.typeText(PeoplePage.auth.pp7.editItemsPerPage,"1",{ replace: true })
 			// Close Edit PP7 view pane dialog
-	    	.click(PeoplePage.auth.finishButton).wait(300)
+	    	.click(PeoplePage.auth.finishButton);
+
+		await t
+			// wait for Save button to show
+			.eval(() => new Promise(resolve => setInterval(function() {
+		        if(jQuery('#panels-ipe-save').length > 0) resolve();
+			}, 500)));
+
+	    await t
 			// save In-Place Editor
-			.click(PeoplePage.auth.panelsSaveButton).wait(300)
+			.click(PeoplePage.auth.panelsSaveButton)
 		    // PP7 more button links to people/keywordTermID
 		    .expect(PeoplePage.auth.pp7.paneMoreButton.getAttribute('href')).contains(filteredMoreURL,'When PP7 is filtered by keyword, PP7 More button url does not link to people/[keyword term ID].');
 
@@ -503,18 +551,42 @@ async function removeProfiles(t, nodes){
 async function showPP7(t){
 
 	await t
-		.navigateTo(Env.baseURL + "/front").wait(300)
+		.navigateTo(Env.baseURL + "/front");
+
+	await t
+		// wait for Customize In-Place Editor button to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('#panels-ipe-customize-page').length > 0) resolve();
+		}, 500)));
+
+	await t
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
-		.click(PeoplePage.auth.panelsCustomizeButton).wait(300)
+		.click(PeoplePage.auth.panelsCustomizeButton)
 		// open Left Region
-		.click(PeoplePage.auth.panelsAddToLeft).wait(300)
-		.click(PeoplePage.auth.viewPanesLink).wait(300)
+		.click(PeoplePage.auth.panelsAddToLeft)
+		.click(PeoplePage.auth.viewPanesLink);
+
+	await t
+		// wait for Select PP7 View Pane to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('a.add-content-link-pp7-panel-pane-1-icon-text-button').length > 0) resolve();
+		}, 500)));
+
+	await t
 		// add PP7 View Pane
-		.click(PeoplePage.auth.pp7.selectViewPane).wait(300)
-		.click(PeoplePage.auth.finishButton).wait(300)
+		.click(PeoplePage.auth.pp7.selectViewPane)
+		.click(PeoplePage.auth.finishButton)
+
+	await t
+		// wait for Save button to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('#panels-ipe-save').length > 0) resolve();
+		}, 500)));
+		
+	await t
 		// save In-Place Editor
-		.click(PeoplePage.auth.panelsSaveButton).wait(300);
+		.click(PeoplePage.auth.panelsSaveButton);
 }
 
 /**
@@ -526,12 +598,20 @@ async function showPP7(t){
 async function editPP7(t){
 
 	await t
-		.navigateTo(Env.baseURL + "/front").wait(300)
+		.navigateTo(Env.baseURL + "/front");
+
+	await t
+		// wait for Customize In-Place Editor button to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('#panels-ipe-customize-page').length > 0) resolve();
+		}, 500)));
+
+	await t
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
-		.click(PeoplePage.auth.panelsCustomizeButton).wait(300)
+		.click(PeoplePage.auth.panelsCustomizeButton)
 		// open Edit cog
-		.click(PeoplePage.auth.pp7.editButton).wait(300);
+		.click(PeoplePage.auth.pp7.editButton);
 }
 
 /**
@@ -542,12 +622,22 @@ async function editPP7(t){
 
 async function hidePP7(t){
 	await t
-		.navigateTo(Env.baseURL + "/front").wait(300)
+		.navigateTo(Env.baseURL + "/front");
+
+	await t
+		// wait for Customize In-Place Editor button to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('#panels-ipe-customize-page').length > 0) resolve();
+		}, 500)));
+
+	await t
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
-		.click(PeoplePage.auth.panelsCustomizeButton).wait(300)
+		.click(PeoplePage.auth.panelsCustomizeButton)
 		// remove PP7 View Pane
-		.click(PeoplePage.auth.pp7.deleteButton).wait(300)
+		.click(PeoplePage.auth.pp7.deleteButton)
+		// wait for dialog handler to show
+		.wait(500)
 		// save In-Place Editor
-		.click(PeoplePage.auth.panelsSaveButton).wait(300);
+		.click(PeoplePage.auth.panelsSaveButton);
 }

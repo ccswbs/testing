@@ -24,7 +24,7 @@ fixture `UG Profile PP6 List View`
 	})
 	('Selected fields show on Profiles PP6 listing view', async t => {
 
-		await t.navigateTo(Env.baseURL + PeoplePage.URL).wait(300);
+		await t.navigateTo(Env.baseURL + PeoplePage.URL);
 
 		let phoneLabel = "Phone:";
 		let emailLabel = "Email:";
@@ -244,23 +244,40 @@ async function showPP6(t){
 	let buttonToEmptyLeftRegion = await Selector('#panels-ipe-regionid-left').find('.pane-delete');
 
 	await t
-		.navigateTo(Env.baseURL + PeoplePage.URL).wait(300)
+		.navigateTo(Env.baseURL + PeoplePage.URL);
+
+	await t
+		// wait for Customize In-Place Editor button to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('#panels-ipe-customize-page').length > 0) resolve();
+		}, 500)));
+
+
+	await t
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
-		.click(PeoplePage.auth.panelsCustomizeButton).wait(300);
+		.click(PeoplePage.auth.panelsCustomizeButton);
 
 	// Empty Left Region of view panes
 	await repeatClick(t,buttonToEmptyLeftRegion);
 
 	await t
 		// open Left Region
-		.click(PeoplePage.auth.panelsAddToLeft).wait(300)
-		.click(PeoplePage.auth.viewPanesLink).wait(300)
+		.click(PeoplePage.auth.panelsAddToLeft)
+		.click(PeoplePage.auth.viewPanesLink)
 		// add PP6 View Pane
-		.click(PeoplePage.auth.pp6.selectViewPane).wait(300)
-		.click(PeoplePage.auth.finishButton).wait(300)
+		.click(PeoplePage.auth.pp6.selectViewPane)
+		.click(PeoplePage.auth.finishButton);
+
+	await t
+		// wait for Save button to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('#panels-ipe-save').length > 0) resolve();
+		}, 500)));
+
+	await t
 		// save In-Place Editor
-		.click(PeoplePage.auth.panelsSaveButton).wait(300);
+		.click(PeoplePage.auth.panelsSaveButton);
 }
 
 /**
@@ -272,12 +289,20 @@ async function showPP6(t){
 async function editPP6(t){
 
 	await t
-		.navigateTo(Env.baseURL + "/front").wait(300)
+		.navigateTo(Env.baseURL + "/front");
+
+	await t
+		// wait for Customize In-Place Editor button to show
+		.eval(() => new Promise(resolve => setInterval(function() {
+	        if(jQuery('#panels-ipe-customize-page').length > 0) resolve();
+		}, 500)));
+
+	await t
 		.setNativeDialogHandler(() => true)
 		// open In-Place Editor
-		.click(PeoplePage.auth.panelsCustomizeButton).wait(300)
+		.click(PeoplePage.auth.panelsCustomizeButton)
 		// open Edit cog
-		.click(PeoplePage.auth.pp6.editButton).wait(300);
+		.click(PeoplePage.auth.pp6.editButton);
 }
 
 /**
@@ -301,14 +326,14 @@ async function hidePP6(t){
 
 async function revertCustomPage(t, customPage){
 	await t
-		.navigateTo(Env.baseURL + CustomizePage.URL).wait(300)
+		.navigateTo(Env.baseURL + CustomizePage.URL)
 		.setNativeDialogHandler(() => true)
 		// select Custom Page to Revert
-		.click(customPage).wait(300)
+		.click(customPage)
 		// select Revert Tab
-		.click(CustomizePage.auth.revertTab).wait(300)
+		.click(CustomizePage.auth.revertTab)
 		// select Revert Button
-		.click(CustomizePage.auth.revertButton).wait(300);
+		.click(CustomizePage.auth.revertButton);
 }
  
 
