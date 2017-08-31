@@ -358,6 +358,7 @@ t.ctx.profile_nid = await Actions.CreateNode("profile",{
     first:t.ctx.firstName,
     last:t.ctx.lastName
   },
+	tid:[t.ctx.category1, t.ctx.category2]
 });
 await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 })
@@ -366,15 +367,8 @@ await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password)
 // Go to edit profile to ensure multiple categories can be clicked
 // Check that profile exist on term filtered views
 await t
-
-	.navigateTo(Env.baseURL + "/node/" + t.ctx.profile_nid + "/edit")
-	.click(PeoplePage.auth.categorySelectTerm1, { shift: true})
-	.click(PeoplePage.auth.categorySelectTerm2, { shift: true})
-
-	.click(PeoplePage.auth.saveButton)
 	.navigateTo(Env.baseURL + "/people/" + t.ctx.category1)
-	// Uncomment the line below this when the ctrl click is working
-	//.expect(PeoplePage.common.listPerson.textContent).contains(t.ctx.fullName)
+	.expect(PeoplePage.common.listPerson.textContent).contains(t.ctx.fullName)
 	.navigateTo(Env.baseURL + "/people/" + t.ctx.category2)
 	.expect(PeoplePage.common.listPerson.textContent).contains(t.ctx.fullName)
 	.navigateTo(Env.baseURL + "/people/" + t.ctx.category3)
