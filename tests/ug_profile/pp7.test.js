@@ -18,7 +18,7 @@ fixture `UG Profile PP7 Teaser List View`
 	test.before(async t => {
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		//UG Profile feature is enabled and configured
-		t.ctx.randomNodes = await generateProfiles(await t, 3);
+		t.ctx.randomNodes = await Actions.generateProfiles(await t, 3);
 		//PP7 teaser view is displayed
 		await showPP7(t);
 	})
@@ -49,7 +49,7 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	.after(async t => {
 		await hidePP7(t);
-		await removeProfiles(await t, t.ctx.randomNodes);
+		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
 
@@ -60,7 +60,7 @@ fixture `UG Profile PP7 Teaser List View`
 	test.before(async t => {
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 		//UG Profile feature is enabled and configured
-		t.ctx.randomNodes = await generateProfiles(await t, 1);
+		t.ctx.randomNodes = await Actions.generateProfiles(await t, 1);
 		//PP7 teaser view is displayed
 		await showPP7(t);
 	})
@@ -87,7 +87,7 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	.after(async t => {
 		await hidePP7(t);
-		await removeProfiles(await t, t.ctx.randomNodes);
+		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
 /**
@@ -98,7 +98,7 @@ fixture `UG Profile PP7 Teaser List View`
 		
 		//UG Profile feature is enabled and configured
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-		t.ctx.randomNodes = await generateProfiles(await t, 1);
+		t.ctx.randomNodes = await Actions.generateProfiles(await t, 1);
 		// Site Manager (role) is logged in
 		await t.click(UserPage.auth.logOut);
 		await Actions.Login(await t, Env.creds.sitemanager.username, Env.creds.sitemanager.password);
@@ -139,7 +139,7 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	.after(async t => {
 		await hidePP7(t);
-		await removeProfiles(await t, t.ctx.randomNodes);
+		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
 
@@ -150,7 +150,7 @@ fixture `UG Profile PP7 Teaser List View`
 	test.before(async t => {
 		//UG Profile feature is enabled and configured
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
-		t.ctx.randomNodes = await generateProfiles(await t, 2);
+		t.ctx.randomNodes = await Actions.generateProfiles(await t, 2);
 		// Site Manager (role) is logged in
 		await t.click(UserPage.auth.logOut);
 		await Actions.Login(await t, Env.creds.sitemanager.username, Env.creds.sitemanager.password);
@@ -192,7 +192,7 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	.after(async t => {
 		await hidePP7(t);
-		await removeProfiles(await t, t.ctx.randomNodes);
+		await Actions.removeProfiles(await t, t.ctx.randomNodes);
 	});
 
 
@@ -213,8 +213,8 @@ fixture `UG Profile PP7 Teaser List View`
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 
 		// Generate profiles (half with a category, half with no category)
-		t.ctx.regularNodes = await generateProfiles(await t, Math.floor(numNodes/2));
-		t.ctx.categorizedNodes = await generateProfiles(await t, numNodes - Math.floor(numNodes/2), {categoryTermID:t.ctx.categoryTermID})
+		t.ctx.regularNodes = await Actions.generateProfiles(await t, Math.floor(numNodes/2));
+		t.ctx.categorizedNodes = await Actions.generateProfiles(await t, numNodes - Math.floor(numNodes/2), {categoryTermID:t.ctx.categoryTermID})
 
 		// Site Manager (role) is logged in
 		await t.click(UserPage.auth.logOut);
@@ -282,9 +282,9 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	.after(async t => {
 		await hidePP7(t);
-		await removeProfiles(await t, t.ctx.regularNodes);
-		await removeProfiles(await t, t.ctx.categorizedNodes);
-		await removeTerms(await t, t.ctx.allTerms);
+		await Actions.removeProfiles(await t, t.ctx.regularNodes);
+		await Actions.removeProfiles(await t, t.ctx.categorizedNodes);
+		await Actions.removeTerms(await t, t.ctx.allTerms);
 	});
 
 /**
@@ -297,7 +297,7 @@ fixture `UG Profile PP7 Teaser List View`
 		t.ctx.allTerms = [];
 
 		// Generate keyword terms
-		let keywords = await generateKeywords(await t, 3);
+		let keywords = await Actions.generateTerms(await t, 3);
 
 		// Prepare comma-separate list of keywords
 		for(let i=0;i<keywords.length;i++){
@@ -314,8 +314,8 @@ fixture `UG Profile PP7 Teaser List View`
 		await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 
 		// Generate profiles (half with keywords, half with no keyword)
-		t.ctx.regularNodes = await generateProfiles(await t, Math.floor(numNodes/2));
-		t.ctx.termedNodes = await generateProfiles(await t, numNodes - Math.floor(numNodes/2), {keywordTerms:keywordTerms});
+		t.ctx.regularNodes = await Actions.generateProfiles(await t, Math.floor(numNodes/2));
+		t.ctx.termedNodes = await Actions.generateProfiles(await t, numNodes - Math.floor(numNodes/2), {keywordTerms:keywordTerms});
 
 		// Site Manager (role) is logged in
 		await t.click(UserPage.auth.logOut);
@@ -382,165 +382,10 @@ fixture `UG Profile PP7 Teaser List View`
 	})
 	.after(async t => {
 		await hidePP7(t);
-		await removeProfiles(await t, t.ctx.regularNodes);
-		await removeProfiles(await t, t.ctx.termedNodes);
-		await removeTerms(await t, t.ctx.allTerms);
+		await Actions.removeProfiles(await t, t.ctx.regularNodes);
+		await Actions.removeProfiles(await t, t.ctx.termedNodes);
+		await Actions.removeTerms(await t, t.ctx.allTerms);
 	});
-
-/**
-* Generates multiple terms and returns array that contains, for each term, the name and ID
-* 
-* @param   {object} t         Test controller
-* @param   {Number} numTerms  Number of terms to generate
-* @returns {Array}            Multidimensional array that contains, for each term: 
-*			  				  	{id:Number} term ID
-*								{name:String} term Name
-*/
-
-async function generateKeywords(t, numTerms){
-	let terms = [];
-	for(let i = 0; i < numTerms; i++) {
-		let termName = Faker.lorem.word();
-		let termID = await Actions.CreateTerm(Util.Vocabulary['tags'],termName,'')
-		terms.push({
-			id:termID,
-			name:termName,
-		});
-	}
-
-	return terms;
-}
-
-/**
-* Deletes generated profiles
-* 
-* @param  {object} t     Test controller
-* @param  {Array} terms  Term IDs to delete
-*/
-
-async function removeTerms(t, terms){
-	for(let i=0;i<terms.length;i++){
-		await Actions.DeleteTerm(terms[i]);
-	}
-}
-
-/**
-* Generates multiple profiles and returns multidimensional array of created node IDs and generated data
-* 
-* @param   {object} t         Test controller
-* @param   {Number} numNodes  Number of nodes to generate
-* @param   {Array} [data]     Data to set for generated nodes (Optional)
-* @returns {Array}            Multidimensional array that contains, for each node: 
-*			  				  	{nodeID:Number} the created node ID
-*								{data:Array} the data generated for that node
-*
-* Data that can be set using data parameter:
-* 	{
-* 		tid:"21",
-* 		// TO DO: tags:"test, tags, here"
-* 	}
-*
-*/
-
-async function generateProfiles(t, numNodes, data){
-	let randomNode;
-	let generatedNodes = [];
-
-	// Profile selectors
-	let imageWidget = Selector('.image-widget-data').find('input[type="file"]');
-	let uploadImage = Selector('.image-widget-data').find('input[type="submit"]');
-	let saveProfile = Selector ('#edit-submit');
-
-	// Profile variables
-	let categoryTermID;
-	let keywordTerms;
-
-	//Check for set data
-	if(typeof data !== 'undefined'){
-		// Set category term
-		if (typeof data.categoryTermID !== 'undefined'){
-			categoryTermID = data.categoryTermID;
-		}
-		// Set keyword terms
-		if (typeof data.keywordTerms !== 'undefined'){
-			keywordTerms = data.keywordTerms;
-		}
-	}
-
-	// Generate nodes
-	for(let i=0;i<numNodes;i++) {
-		let firstName = Faker.name.firstName();
-		let lastName = Faker.name.lastName();
-		let summary = Faker.lorem.paragraph();
-		let teaser = Faker.lorem.sentence();
-		let jobTitle = Faker.name.jobTitle();
-		let address = Faker.address.streetAddress();
-		let email = Faker.internet.email();
-		let phone = Faker.phone.phoneNumber();
-		let fax = Faker.phone.phoneNumber();
-		let office = Faker.address.streetAddress();
-
-		let randomData = {
-			name:{
-				first:firstName,
-				last:lastName
-			},
-			summary:{
-				body:summary
-			},
-			teaser:{
-				body:teaser
-			},
-			tid:categoryTermID,
-			info_fields:{
-				title:jobTitle,
-				address:address,
-				email:email,
-				telephonenumber:phone,
-				faxnumber:fax,
-				office:office,
-			},
-			tags:keywordTerms,
-		};		
-
-		randomNode = await Actions.CreateNode('profile',randomData);
-
-		generatedNodes.push({
-			nodeID:randomNode,
-			data:randomData,
-		});
-	}
-
-	// Upload test profile images
-	for(let i=0;i<numNodes;i++){
-		await t
-			.navigateTo(Env.baseURL + '/node/' + generatedNodes[i].nodeID + '/edit')
-			.setFilesToUpload(imageWidget, [
-            '../../test_uploads/1.jpeg',
-	        ])
-	        .click(uploadImage)
-	        .click(saveProfile);
-	}
-
-	return generatedNodes;
-}
-
-/**
-* Deletes generated profiles
-* 
-* @param  {object} t     Test controller
-* @param  {Array} nodes  Nodes to delete
-*
-*  Note: Once node is deleted, any related  image/file uploads 
-*   will be deleted from file_managed table 
-*	during next cron job provided images are 6 hours old
-*/
-
-async function removeProfiles(t, nodes){
-	for(let i=0;i<nodes.length;i++){
-		await Actions.DeleteNode(nodes[i].nodeID);
-	}
-}
 
 /**
 * Shows PP7 view pane on baseURL and returns view pane DOM ID
