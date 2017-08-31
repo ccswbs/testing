@@ -3,6 +3,7 @@ const request = require('request-promise-native');
 const Env = require('./environment.js');
 const Util = require('./utils.js');
 const UserPage = require('./pages/user.js');
+const CustomizePage = require('./pages/admin/structure/pages.js');
 const Faker = require('faker');
 
 const PostPath = "/testcafe";
@@ -821,6 +822,48 @@ module.exports = {
 		// during next cron job provided images are 6 hours old
 		for(let i=0;i<terms.length;i++){
 			await this.DeleteTerm(terms[i]);
+		}
+	},
+
+	/**
+	* Reverts a custom page to its default state
+	* 
+	* @param  {object} t  			Test controller
+	* @param  {object} customPage   Selector for customPage to revert
+	*/
+	revertCustomPage:async function (t, customPage){
+
+		// Only admin can revert custom pages
+		await t.click(UserPage.auth.logOut);
+		await this.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
+
+		await t
+			.navigateTo(Env.baseURL + CustomizePage.URL)
+			.setNativeDialogHandler(() => true)
+			// select Custom Page to Revert
+			.click(customPage)
+			// select Revert Tab
+			.click(CustomizePage.auth.revertTab)
+			// select Revert Button
+			.click(CustomizePage.auth.revertButton);
+	},
+
+	/**
+	* Clicks an element until the element no longer exists in the DOM.
+	* E.g. Useful for clearing a region of view panes by repeatedly clicking the delete button.
+	* 
+	* @param   {object} t             Test controller
+	* @param   {object} clickElement  Element to click
+	*
+	*/
+	repeatClick:async function (t,clickElement){
+		let elementExists = await clickElement.exists;
+		let numElements = await clickElement.count;
+
+		if(elementExists == true){
+			for(let i=0;i<numElements;i++){
+				await t.click(clickElement);
+			}
 		}
 	},
 
