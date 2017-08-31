@@ -362,21 +362,16 @@ t.ctx.profile_nid = await Actions.CreateNode("profile",{
 });
 await Actions.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
 })
-
 ('Categories are multiselect', async t => {
-// Go to edit profile to ensure multiple categories can be clicked
-// Check that profile exist on term filtered views
 await t
+// Check that profile exist on intended term filtered views
 	.navigateTo(Env.baseURL + "/people/" + t.ctx.category1)
 	.expect(PeoplePage.common.listPerson.textContent).contains(t.ctx.fullName)
 	.navigateTo(Env.baseURL + "/people/" + t.ctx.category2)
 	.expect(PeoplePage.common.listPerson.textContent).contains(t.ctx.fullName)
+// Check that profile does not exsist on unintended filtered views
 	.navigateTo(Env.baseURL + "/people/" + t.ctx.category3)
 	.expect(PeoplePage.common.noResults.textContent).contains("No results found.")
-
-
-// Check that profile does not exist on term filtered view
-
 }).after(async t => {
 //Remove profiles
 await Actions.DeleteNode(t.ctx.profile_nid);
@@ -384,7 +379,6 @@ await Actions.DeleteNode(t.ctx.profile_nid);
 await Actions.DeleteTerm(t.ctx.category1);
 await Actions.DeleteTerm(t.ctx.category2);
 await Actions.DeleteTerm(t.ctx.category3);
-
 });
 
 
