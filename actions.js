@@ -3,12 +3,16 @@ const request = require('request-promise-native');
 const Env = require('./environment.js');
 const Util = require('./utils.js');
 const UserPage = require('./pages/user.js');
+const CustomizePage = require('./pages/admin/structure/pages.js');
+const Faker = require('faker');
 
 const PostPath = "/testcafe";
 const LoginEndpoint = "/user/login";
 const TokenEndpoint = "/user/token.json";
 const NodeEndpoint = "/node";
 const TermEndpoint = "/taxonomy_term";
+
+import { Selector } from 'testcafe';
 
 async function getLoginHeaders(user, pass) {
 	// Post to login
@@ -292,6 +296,7 @@ function eventFormat(data) {
 function profileFormat(data) {
 	data.role = data.role || {};
 	data.summary = data.summary || {};
+	data.teaser = data.teaser || {};
 	data.info_fields = data.info_fields || {};
 	data.name = data.name || {};
 	var post = {
@@ -332,13 +337,27 @@ function profileFormat(data) {
 				}
 			]
 		},
+		field_profile_teaser:{
+			und:[
+				{
+					value:data.teaser.body || "",
+					format:data.teaser.format || "filtered_html"
+				}
+			]
+		},
 		field_tags:{
 			und:data.tags || ""
 		}
 	};
 
 	for(var field in data.info_fields) {
-		post["field_profile_" + field] = data.info_fields[field];
+		let data_container = {und:[
+			{
+				value:data.info_fields[field],
+			}
+		]};
+
+		post["field_profile_" + field] = data_container;
 	}
 
 	return post;
@@ -650,5 +669,202 @@ module.exports = {
 	newsFormat:newsFormat,
 	eventFormat:eventFormat,
 	profileFormat:profileFormat,
-	faqFormat:faqFormat
+	faqFormat:faqFormat,
+
+	/**
+	* Generates multiple profiles and returns multidimensional array of created node IDs and generated data
+	* 
+	* @param   {object} t         Test controller
+	* @param   {Number} numNodes  Number of nodes to generate
+	* @param   {Array} [data]     Data to set for generated nodes (Optional)
+	* @returns {Array}            Multidimensional array that contains, for each node: 
+	*			  				  	{nodeID:Number} the created node ID
+	*								{data:Array} the data generated for that node
+	*
+	* Data that can be set using data parameter:
+	* 	{
+	* 		tid:"21",
+	* 		// TO DO: tags:"test, tags, here"
+	* 	}
+	*
+	*/
+
+	generateProfiles:async function(t, numNodes, data) {
+		let randomNode;
+		let generatedNodes = [];
+
+		// Profile selectors
+		let imageWidget = Selector('.image-widget-data').find('input[type="file"]');
+		let uploadImage = Selector('.image-widget-data').find('input[type="submit"]');
+		let saveProfile = Selector ('#edit-submit');
+
+		// Profile variables
+		let categoryTermID;
+		let keywordTerms;
+
+		//Check for set data
+		if(typeof data !== 'undefined'){
+			// Set category term
+			if (typeof data.categoryTermID !== 'undefined'){
+				categoryTermID = data.categoryTermID;
+			}
+			// Set keyword terms
+			if (typeof data.keywordTerms !== 'undefined'){
+				keywordTerms = data.keywordTerms;
+			}
+		}
+
+		// Generate nodes
+		for(let i=0;i<numNodes;i++) {
+			let firstName = Faker.name.firstName();
+			let lastName = Faker.name.lastName();
+			let summary = Faker.lorem.paragraph();
+			let teaser = Faker.lorem.sentence();
+			let jobTitle = Faker.name.jobTitle();
+			let address = Faker.address.streetAddress();
+			let email = Faker.internet.email();
+			let phone = Faker.phone.phoneNumber();
+			let fax = Faker.phone.phoneNumber();
+			let office = Faker.address.streetAddress();
+
+			let randomData = {
+				name:{
+					first:firstName,
+					last:lastName
+				},
+				summary:{
+					body:summary
+				},
+				teaser:{
+					body:teaser
+				},
+				tid:categoryTermID,
+				info_fields:{
+					title:jobTitle,
+					address:address,
+					email:email,
+					telephonenumber:phone,
+					faxnumber:fax,
+					office:office,
+				},
+				tags:keywordTerms,
+			};		
+
+			randomNode = await this.CreateNode('profile',randomData);
+
+			generatedNodes.push({
+				nodeID:randomNode,
+				data:randomData,
+			});
+		}
+
+		// Upload test profile images
+		for(let i=0;i<numNodes;i++){
+			await t
+				.navigateTo(Env.baseURL + '/node/' + generatedNodes[i].nodeID + '/edit')
+				.setFilesToUpload(imageWidget, [
+	            '../../test_uploads/1.jpeg',
+		        ])
+		        .click(uploadImage)
+		        .click(saveProfile);
+		}
+
+		return generatedNodes;
+	},
+
+	/**
+	* Deletes generated profiles
+	* 
+	* @param  {object} t     Test controller
+	* @param  {Array} nodes  Nodes to delete
+	*
+	*  Note: Once node is deleted, any related  image/file uploads 
+	*   will be deleted from file_managed table 
+	*	during next cron job provided images are 6 hours old
+	*/
+	removeProfiles:async function(t, nodes){
+		for(let i=0;i<nodes.length;i++){
+			await this.DeleteNode(nodes[i].nodeID);
+		}
+	},
+
+	/**
+	* Generates multiple terms in tags vocabulary and returns array that contains, for each term, the name and ID
+	* 
+	* @param   {object} t         Test controller
+	* @param   {Number} numTerms  Number of terms to generate
+	* @returns {Array}            Multidimensional array that contains, for each term: 
+	*			  				  	{id:Number} term ID
+	*								{name:String} term Name
+	*/
+	generateTerms:async function (t, numTerms){
+		let terms = [];
+		for(let i = 0; i < numTerms; i++) {
+			let termName = Faker.lorem.word();
+			let termID = await this.CreateTerm(Util.Vocabulary['tags'],termName,'')
+			terms.push({
+				id:termID,
+				name:termName,
+			});
+		}
+
+		return terms;
+	},
+
+	/**
+	* Deletes generated terms
+	* 
+	* @param  {object} t     Test controller
+	* @param  {Array} terms  Term IDs to delete
+	*/
+	removeTerms:async function (t, terms){
+		// Note: Once node is deleted, any related  image/file uploads will be deleted from file_managed table 
+		// during next cron job provided images are 6 hours old
+		for(let i=0;i<terms.length;i++){
+			await this.DeleteTerm(terms[i]);
+		}
+	},
+
+	/**
+	* Reverts a custom page to its default state
+	* 
+	* @param  {object} t  			Test controller
+	* @param  {object} customPage   Selector for customPage to revert
+	*/
+	revertCustomPage:async function (t, customPage){
+
+		// Only admin can revert custom pages
+		await t.click(UserPage.auth.logOut);
+		await this.Login(await t, Env.creds.admin.username, Env.creds.admin.password);
+
+		await t
+			.navigateTo(Env.baseURL + CustomizePage.URL)
+			.setNativeDialogHandler(() => true)
+			// select Custom Page to Revert
+			.click(customPage)
+			// select Revert Tab
+			.click(CustomizePage.auth.revertTab)
+			// select Revert Button
+			.click(CustomizePage.auth.revertButton);
+	},
+
+	/**
+	* Clicks an element until the element no longer exists in the DOM.
+	* E.g. Useful for clearing a region of view panes by repeatedly clicking the delete button.
+	* 
+	* @param   {object} t             Test controller
+	* @param   {object} clickElement  Element to click
+	*
+	*/
+	repeatClick:async function (t,clickElement){
+		let elementExists = await clickElement.exists;
+		let numElements = await clickElement.count;
+
+		if(elementExists == true){
+			for(let i=0;i<numElements;i++){
+				await t.click(clickElement);
+			}
+		}
+	},
+
 };

@@ -9,6 +9,7 @@ module.exports = {
 		errorMessage:Selector('.alert')
 	},
 	auth:{
-		pageHeader:Selector('h1.page-header')
+		pageHeader:Selector('h1.page-header'),
+		logOut:Selector('#toolbar-user').find('.logout').find('a')
 	}
 };
